@@ -1,0 +1,9 @@
+module Apps.Scratch
+Scratch 1.0 Scratch.qml
+StackBlock 1.0 StackBlock.qml
+BooleanBlock 1.0 BooleanBlock.qml
+ValueBlock 1.0 ValueBlock.qml
+ScratchText 1.0 ScratchText.qml
+ListItem 1.0 ListItem.qml
+BooleanSocket 1.0 BooleanSocket.qml
+ValueInput 1.0 ValueInput.qml

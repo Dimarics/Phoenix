@@ -1,0 +1,4 @@
+module Apps.Mode3D
+Mode3D 1.0 Mode3D.qml
+JointAngle 1.0 JointAngle.qml
+JointNode 1.0 JointNode.qml
