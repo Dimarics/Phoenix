@@ -18,7 +18,7 @@ HobotDevice {
         HobotDevice.Grub
     ]
     availableProtocols: ["COM порт", "Точка доступа", "Локальная сеть"]
-    protocol: MAVLinkInterface {}
+    protocol: Interface {}
     /*onProtocolNameChanged: {
         var qml
         switch(protocolName) {

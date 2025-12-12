@@ -11,12 +11,12 @@ INCLUDEPATH += \
 
 HEADERS += \
     $$PWD/appbackend.h \
-    $$PWD/mavlinkinterface.h
+    $$PWD/interface.h
 
 SOURCES += \
+    $$PWD/interface.cpp \
     $$PWD/main.cpp \
-    $$PWD/appbackend.cpp \
-    $$PWD/mavlinkinterface.cpp
+    $$PWD/appbackend.cpp
 
 resources.files += \
     $$PWD/main.qml \

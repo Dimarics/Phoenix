@@ -1,4 +1,5 @@
 #include "httpserver.h"
+#include "mavlinkinterface.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QTcpServer>
@@ -19,7 +20,7 @@ const QHash<QString, QString> HttpServer::mimeTypes = {
     { "txt", "text/plain" }
 };
 
-HttpServer::HttpServer() : m_server(new QHttpServer(this)), m_mavlinkInterface(new MAVLinkInterface(this))
+HttpServer::HttpServer() : m_server(new QHttpServer(this))
 {
     QTcpServer *tcp = new QTcpServer(this);
     tcp->listen(QHostAddress::Any, 80);
@@ -32,10 +33,6 @@ HttpServer::HttpServer() : m_server(new QHttpServer(this)), m_mavlinkInterface(n
         }
         return QHttpServerResponse(QHttpServerResponder::StatusCode::NotFound);
     });
-    m_server->route("/device", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
-        m_mavlinkInterface->sendMavlinkMessage(request.body());
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
-    });
     // Обработчик для других статических файлов
     m_server->route("/<arg>", [](QString fileName) {
         //qDebug() << "arg:" << fileName;
@@ -46,5 +43,31 @@ HttpServer::HttpServer() : m_server(new QHttpServer(this)), m_mavlinkInterface(n
             return QHttpServerResponse("File not found", QHttpServerResponse::StatusCode::NotFound);
         }
         return QHttpServerResponse(mimeTypes.value(QFileInfo(fileName).suffix(), "text/plain").toUtf8(), file.readAll());
+    });
+
+    m_server->route("/device/arm", QHttpServerRequest::Method::Post, [this] {
+        //qDebug() << "arm";
+        mavlinkInterface->arm();
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
+    });
+    m_server->route("/device/setThrottle", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        mavlinkInterface->setThrottle(request.body().toFloat());
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
+    });
+    m_server->route("/device/setRoll", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        mavlinkInterface->setRoll(request.body().toFloat());
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
+    });
+    m_server->route("/device/setPitch", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        mavlinkInterface->setPitch(request.body().toFloat());
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
+    });
+    m_server->route("/device/setYaw", QHttpServerRequest::Method::Post, [this](const QHttpServerRequest &request) {
+        mavlinkInterface->setYaw(request.body().toFloat());
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
+    });
+    m_server->route("/device/align", QHttpServerRequest::Method::Post, [this] {
+        mavlinkInterface->align();
+        return QHttpServerResponse(QHttpServerResponder::StatusCode::Accepted);
     });
 }

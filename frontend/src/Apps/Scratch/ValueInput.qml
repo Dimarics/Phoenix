@@ -8,6 +8,8 @@ Socket {
     //property int valueType: ValueInput.Float
     property alias text: textInput.text
     property Item focusEffectObject
+    property real min: -100000
+    property real max: 100000
     //property var value: next ? next.value() : textInput.text
     type: "value"
     visible: true
@@ -25,8 +27,16 @@ Socket {
         PathLine { relativeX: -width + height; relativeY: 0 },
         PathArc { relativeX: 0; relativeY: -height; radiusX: height / 2; radiusY: height / 2 }
     ]
-    Component { id: intValidator; IntValidator{} }
-    Component { id: doubleValidator; DoubleValidator { locale: 'C'; notation: DoubleValidator.StandardNotation } }
+    Component { id: intValidator; IntValidator { bottom: root.min; top: root.max } }
+    Component {
+        id: doubleValidator
+        DoubleValidator {
+            locale: 'C'
+            notation: DoubleValidator.StandardNotation
+            bottom: root.min
+            top: root.max
+        }
+    }
     state: "double"
     states: [
         State {

@@ -7,5 +7,6 @@ StackBlock {
     ScratchText { text: "включить моторы" }
     function run() {
         App.device.protocol.arm()
+        completed(next)
     }
 }

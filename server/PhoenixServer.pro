@@ -1,4 +1,4 @@
-QT += core websockets network httpserver serialport
+QT += core serialport websockets httpserver
 
 include(src/src.pri)
 
@@ -21,11 +21,16 @@ win32: {
     LIBS += -lopencv_objdetect4120
 }
 unix: {
-    #INCLUDEPATH += /usr/local/opencv/include/opencv4
+    INCLUDEPATH += /home/mes/OpenCV-4.12.0/include/opencv4
+    LIBS += -L/home/mes/OpenCV-4.12.0/lib
     LIBS += -lopencv_core
     LIBS += -lopencv_highgui
     LIBS += -lopencv_imgcodecs
     LIBS += -lopencv_imgproc
+    LIBS += -lopencv_videoio
+    LIBS += -lopencv_objdetect
+    LIBS += -lopencv_calib3d
+    LIBS += -lopencv_dnn
+    LIBS += -lopencv_features2d
+    LIBS += -lopencv_flann
 }
-
-RESOURCES +=

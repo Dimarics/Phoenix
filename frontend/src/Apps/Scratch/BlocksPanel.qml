@@ -206,7 +206,6 @@ Item {
         function connectChildren(object) {
             for (let child of object.children) {
                 if (child instanceof BasicBlock) {
-                    child.clonable = true
                     child.canvas = canvas
                     child.overlay = overlay
                     child.dragStart.connect(dragHandler.createNewBlock)
@@ -228,7 +227,10 @@ Item {
         for (var i = 0; i < workspace.variables.count; ++i)
             if (name === workspace.variables.get(i).name) return
         var variable = Qt.createComponent("Blocks/Variable.qml").createObject(null, { name: name })
+        variable.canvas = canvas
         variable.dragStart.connect(dragHandler.createNewBlock)
+        variable.dragMove.connect(dragHandler.blockDragMove)
+        variable.dropped.connect(dragHandler.blockDropped)
         //workspace.variables.set(name, 0)
         function compare(a, b) {
             if (parseFloat(a) && parseFloat(b)) {

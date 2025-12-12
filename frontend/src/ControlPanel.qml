@@ -32,14 +32,23 @@ Item {
             Joystick {
                 //leftText: "🡰"; rightText: "🡲"; topText: "🡱"; bottomText: "🡳"
                 leftText: "◄"; rightText: "►"; topText: "▲"; bottomText: "▼"
+                onTopPressed: App.device.protocol.setPitch(40)
+                onBottomPressed: App.device.protocol.setPitch(-40)
+                onLeftPressed: App.device.protocol.setRoll(-40)
+                onRightPressed: App.device.protocol.setRoll(40)
+                onTopReleased: App.device.protocol.setPitch(0)
+                onBottomReleased: App.device.protocol.setPitch(0)
+                onLeftReleased: App.device.protocol.setRoll(0)
+                onRightReleased: App.device.protocol.setRoll(0)
             }
         }
-        Text { text: "Скорость:"; Layout.topMargin: 20 }
+        Text { text: "Тяга:"; Layout.topMargin: 20 }
         Volume {
-            min: 1; max: 100; value: 50
+            min: 0; max: 100; value: 0
             decimals: 0
             spacing: parent.spacing
             Layout.fillWidth: true
+            onValueModified: App.device.protocol.setThrottle(value)
         }
     }
     /*

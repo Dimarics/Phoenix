@@ -1,5 +1,5 @@
 import QtQuick as Q
-import QtQuick.Controls.Basic as C
+//import QtQuick.Controls.Basic as C
 //import Hobots
 
 Q.Item {
@@ -41,40 +41,40 @@ Q.Item {
         if (contentY > contentHeight - root.height) contentY = contentHeight - root.height
         else if (contentY < 0) contentY = 0
     }
-    /*onContentXChanged: {
-        if (!mouseArea.pressed) return
+    onContentXChanged: {
+        if (mouseArea.pressed) return
         horizontalScrollBar.position = contentX / (contentWidth - width) * (1 - horizontalScrollBar.size)
     }
     onContentYChanged: {
-        if (!mouseArea.pressed) return
+        if (mouseArea.pressed) return
         verticalScrollBar.position = contentY / (contentHeight - height) * (1 - verticalScrollBar.size)
-    }*/
+    }
     Q.MouseArea {
         id: mouseArea
         property point mousePress
         width: root.width; height: root.height
         acceptedButtons: Qt.LeftButton
         onPressed: {
-            mousePress.x = mouseX + contentX
-            mousePress.y = mouseY + contentY
+            mousePress.x = mouseX + root.contentX
+            mousePress.y = mouseY + root.contentY
         }
         onPositionChanged: {
             if (pressed) {
                 var newX = mousePress.x - mouseX
                 var newY = mousePress.y - mouseY
-                if (newX > contentWidth - root.width) newX = contentWidth - root.width
+                if (newX > root.contentWidth - root.width) newX = contentWidth - root.width
                 else if (newX < 0) newX = 0
-                if (newY > contentHeight - root.height) newY = contentHeight - root.height
+                if (newY > root.contentHeight - root.height) newY = contentHeight - root.height
                 else if (newY < 0) newY = 0
-                contentX = newX; contentY = newY
+                root.contentX = newX; root.contentY = newY
                 //
-                horizontalScrollBar.position = contentX / (contentWidth - width) * (1 - horizontalScrollBar.size)
-                verticalScrollBar.position = contentY / (contentHeight - height) * (1 - verticalScrollBar.size)
+                horizontalScrollBar.position = root.contentX / (root.contentWidth - width) * (1 - horizontalScrollBar.size)
+                verticalScrollBar.position = root.contentY / (root.contentHeight - height) * (1 - verticalScrollBar.size)
             }
         }
         onWheel: wheel => {
                      var delta = wheel.angleDelta.y / 120 * 20
-                     if (wheelDir === ScrollArea.Vertical) {
+                     if (root.wheelDir === ScrollArea.Vertical) {
                          root.contentY -= delta
                      } else {
                          root.contentX -= delta
@@ -83,7 +83,7 @@ Q.Item {
     }
     Q.Item {
         id: contentItem
-        x: -contentX; y: -contentY
+        x: -root.contentX; y: -root.contentY
         width: root.width; height: root.height
         /*Q.Rectangle {
             z: 1
@@ -99,7 +99,7 @@ Q.Item {
     }
     ScrollBar {
         id: verticalScrollBar
-        color: sliderColor
+        color: root.sliderColor
 
         x: root.width - width
         height: root.height
@@ -107,15 +107,15 @@ Q.Item {
 
         orientation: Qt.Vertical
         bottomPadding: horizontalScrollBar.visible ? horizontalScrollBar.height : 2
-        size: root.height / contentHeight
+        size: root.height / root.contentHeight
         onPositionChanged: {
             if (!pressed) return
-            contentY = (contentHeight - root.height) * position / (1 - size)
+            root.contentY = (root.contentHeight - root.height) * position / (1 - size)
         }
     }
     ScrollBar {
         id: horizontalScrollBar
-        color: sliderColor
+        color: root.sliderColor
 
         y: root.height - height
         width: root.width
@@ -123,10 +123,14 @@ Q.Item {
 
         orientation: Qt.Horizontal
         rightPadding: verticalScrollBar.visible ? verticalScrollBar.width : 2
-        size: root.width / contentWidth
+        size: root.width / root.contentWidth
         onPositionChanged: {
             if (!pressed) return
-            contentX = (contentWidth - root.width) * position / (1 - size)
+            root.contentX = (root.contentWidth - root.width) * position / (1 - size)
         }
+    }
+    Q.Component.onCompleted: {
+        horizontalScrollBar.position = contentX / (contentWidth - width) * (1 - horizontalScrollBar.size)
+        verticalScrollBar.position = contentY / (contentHeight - height) * (1 - verticalScrollBar.size)
     }
 }

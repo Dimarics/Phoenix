@@ -1,2 +1,2 @@
 module Hobots
-typeinfo hobots.qmltypes
+typeinfo phoenixfrontend.qmltypes

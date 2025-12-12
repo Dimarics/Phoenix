@@ -27,8 +27,14 @@ Item {
     Component {
         id: scratch
         Scratch {
+            availableModes: Scratch.Debug
             movement: [
-                Arm{}
+                Arm {},
+                SetThrottle {},
+                SetPitch {},
+                SetRoll {},
+                SetYaw {},
+                Align {}
             ]
             controls: [
                 Delay {}

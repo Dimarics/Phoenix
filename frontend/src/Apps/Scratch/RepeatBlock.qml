@@ -13,4 +13,5 @@ ContentBlock {
         verticalAlignment: Qt.AlignVCenter
         horizontalAlignment: Qt.AlignHCenter
     }
+    function reset() {}
 }

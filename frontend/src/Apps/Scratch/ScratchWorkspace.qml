@@ -179,7 +179,7 @@ Item {
                         block.connectTo(socket)
                     }
                 }
-                workspace.adjustWidth(); workspace.adjustHeight()
+                //workspace.adjustWidth(); workspace.adjustHeight()
             }
         }
         function bestMatch(plugBlock) {
@@ -229,6 +229,7 @@ Item {
     }
     C.ScrollArea {
         id: flickable
+        contentX: 1000; contentY: 1000
         contentWidth: canvas.width * canvas.scale; contentHeight: canvas.height * canvas.scale
         anchors.fill: parent
         horizontalScrollBar.leftPadding: blocksPanel.width + 2
@@ -253,11 +254,11 @@ Item {
         }
         Item {
             id: canvas
-            //width: 2000; height: 2000
+            width: 5000; height: 5000
             transformOrigin: Item.TopLeft
         }
-        onWidthChanged: workspace.adjustWidth()
-        onHeightChanged: workspace.adjustHeight()
+        //onWidthChanged: workspace.adjustWidth()
+        //onHeightChanged: workspace.adjustHeight()
     }
     BlocksPanel {
         id: blocksPanel
@@ -353,7 +354,7 @@ Item {
         onClicked: { canvas.scale *= 1.25 }
     }
     property real minX: 0
-    function adjustWidth() {
+    /*function adjustWidth() {
         let w = flickable.width * 1.5
         if (canvas.children.length) {
             let min_x = Infinity, max_x = 0
@@ -388,7 +389,7 @@ Item {
             flickable.contentY += dy * canvas.scale
         }
         canvas.height = h
-    }
+    }*/
     function topLevelBlocks() {
         let blocks = []
         for (let child of canvas.children) {
@@ -403,7 +404,7 @@ Item {
         for (let child of canvas.children) child.destroy()
         blocksPanel.clear()
         variables.clear()
-        adjustWidth(); adjustHeight()
+        //adjustWidth(); adjustHeight()
     }
     function save(filePath) {
         var json = {
@@ -478,7 +479,7 @@ Item {
                 let block = createBlock(blockJSON);
                 block.x = blockJSON.x; block.y = blockJSON.y
             }
-            adjustWidth(); adjustHeight()
+            //adjustWidth(); adjustHeight()
             return true
         } catch (error) {
             console.error(error)

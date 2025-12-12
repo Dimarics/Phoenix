@@ -8,22 +8,51 @@ import QtQuick.tooling 1.2
 Module {
     Component {
         file: "abstractblock.h"
+        lineNumber: 11
         name: "AbstractBlock"
         accessSemantics: "reference"
-        defaultProperty: "data"
-        parentProperty: "parent"
         prototype: "QQuickItem"
         exports: ["Hobots/AbstractBlock 1.0"]
         exportMetaObjectRevisions: [256]
+        Property {
+            name: "clonable"
+            type: "bool"
+            read: "clonable"
+            write: "setClonable"
+            notify: "clonableChanged"
+            index: 0
+        }
         Property {
             name: "cursorShape"
             type: "Qt::CursorShape"
             read: "cursorShape"
             write: "setCursorShape"
             notify: "cursorShapeChanged"
-            index: 0
+            index: 1
         }
+        Property {
+            name: "canvas"
+            type: "QQuickItem"
+            isPointer: true
+            read: "canvas"
+            write: "setCanvas"
+            notify: "canvasChanged"
+            index: 2
+        }
+        Property {
+            name: "overlay"
+            type: "QQuickItem"
+            isPointer: true
+            read: "overlay"
+            write: "setOverlay"
+            notify: "overlayChanged"
+            index: 3
+        }
+        Signal { name: "clonableChanged" }
         Signal { name: "cursorShapeChanged" }
+        Signal { name: "canvasChanged" }
+        Signal { name: "overlayChanged" }
+        Signal { name: "dragTargetChanged" }
         Signal {
             name: "dragStart"
             Parameter { type: "AbstractBlock"; isPointer: true }
@@ -43,6 +72,7 @@ Module {
     }
     Component {
         file: "appbackend.h"
+        lineNumber: 13
         name: "AppBackend"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -56,7 +86,7 @@ Module {
             read: "tempLocation"
             index: 0
             isReadonly: true
-            isConstant: true
+            isPropertyConstant: true
         }
         Property {
             name: "appDataLocation"
@@ -64,7 +94,7 @@ Module {
             read: "appDataLocation"
             index: 1
             isReadonly: true
-            isConstant: true
+            isPropertyConstant: true
         }
         Property {
             name: "deviceName"
@@ -75,62 +105,94 @@ Module {
             index: 2
         }
         Property {
+            name: "availableDevices"
+            type: "QStringList"
+            read: "availableDevices"
+            write: "setAvailableDevices"
+            notify: "availableDevicesChanged"
+            index: 3
+        }
+        Property {
             name: "device"
             type: "QObject"
             isPointer: true
             read: "device"
             write: "setDevice"
             notify: "deviceChanged"
-            index: 3
+            index: 4
+        }
+        Property {
+            name: "availablePorts"
+            type: "QStringList"
+            read: "availablePorts"
+            notify: "availablePortsChanged"
+            index: 5
+            isReadonly: true
         }
         Signal { name: "deviceNameChanged" }
         Signal { name: "deviceChanged" }
+        Signal { name: "availableDevicesChanged" }
+        Signal { name: "availablePortsChanged" }
         Method {
             name: "saveFile"
+            isMethodConstant: true
             Parameter { name: "data"; type: "QByteArray" }
             Parameter { name: "path"; type: "QString" }
         }
         Method {
             name: "saveFile"
+            isMethodConstant: true
             Parameter { name: "data"; type: "QByteArray" }
             Parameter { name: "url"; type: "QUrl" }
         }
         Method {
             name: "readFile"
             type: "QByteArray"
+            isMethodConstant: true
             Parameter { name: "path"; type: "QString" }
         }
         Method {
             name: "readFile"
             type: "QByteArray"
+            isMethodConstant: true
             Parameter { name: "url"; type: "QUrl" }
         }
         Method {
             name: "readJSON"
             type: "QVariant"
+            isMethodConstant: true
             Parameter { name: "path"; type: "QString" }
         }
         Method {
             name: "readJSON"
             type: "QVariant"
+            isMethodConstant: true
             Parameter { name: "url"; type: "QUrl" }
+        }
+        Method {
+            name: "loadModel"
+            type: "bool"
+            isMethodConstant: true
+            Parameter { name: "lib_name"; type: "QString" }
         }
     }
     Component {
         file: "filepicker.h"
+        lineNumber: 11
         name: "FilePicker"
         accessSemantics: "reference"
-        prototype: "QObject"
+        prototype: "QQmlParserStatus"
+        interfaces: ["QQmlParserStatus"]
         exports: ["Hobots/FilePicker 1.0"]
         exportMetaObjectRevisions: [256]
         Enum {
             name: "FileMode"
-            type: "quint8"
+            type: "uint8_t"
             values: ["OpenFile", "OpenFiles", "SaveFile"]
         }
         Enum {
             name: "AcceptableFiles"
-            type: "quint8"
+            type: "uint8_t"
             values: ["All", "Text", "JSON", "CPP", "Py", "Images"]
         }
         Property {
@@ -199,9 +261,10 @@ Module {
         Signal { name: "nameFiltersChanged" }
         Signal {
             name: "fileReaded"
-            Parameter { name: "data"; type: "QString" }
+            Parameter { name: "data"; type: "QByteArray" }
         }
         Signal { name: "closed" }
+        Method { name: "fileHandler" }
         Method { name: "open" }
         Method {
             name: "save"
@@ -214,6 +277,7 @@ Module {
     }
     Component {
         file: "firmwareloader.h"
+        lineNumber: 10
         name: "FirmwareLoader"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -241,166 +305,10 @@ Module {
         }
     }
     Component {
-        file: "hobotinterface.h"
-        name: "HobotInterface"
-        accessSemantics: "reference"
-        prototype: "QObject"
-        exports: ["Hobots/HobotInterface 1.0"]
-        exportMetaObjectRevisions: [256]
-        Enum {
-            name: "State"
-            type: "quint8"
-            values: [
-                "Unconnected",
-                "Connecting",
-                "Connected",
-                "Online",
-                "Closing"
-            ]
-        }
-        Enum {
-            name: "Error"
-            values: ["ConnectionError", "TimeoutError", "UnknownError"]
-        }
-        Property {
-            name: "state"
-            type: "State"
-            read: "state"
-            notify: "stateChanged"
-            index: 0
-            isReadonly: true
-        }
-        Signal {
-            name: "stateChanged"
-            Parameter { name: "state"; type: "State" }
-        }
-        Signal {
-            name: "errorOccurred"
-            Parameter { name: "error"; type: "Error" }
-        }
-        Signal {
-            name: "statusChanged"
-            Parameter { name: "status"; type: "QString" }
-        }
-        Signal {
-            name: "xChanged"
-            Parameter { name: "value"; type: "double" }
-        }
-        Signal {
-            name: "yChanged"
-            Parameter { name: "value"; type: "double" }
-        }
-        Signal {
-            name: "zChanged"
-            Parameter { name: "value"; type: "double" }
-        }
-        Signal {
-            name: "jointChanged"
-            Parameter { name: "id"; type: "quint8" }
-            Parameter { name: "value"; type: "double" }
-        }
-        Signal {
-            name: "extruderTempChanged"
-            Parameter { name: "value"; type: "double" }
-        }
-        Signal { name: "goalAchieved" }
-        Method {
-            name: "moveToX"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "moveToY"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "moveToZ"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "moveToXY"
-            Parameter { name: "x"; type: "double" }
-            Parameter { name: "y"; type: "double" }
-        }
-        Method {
-            name: "moveToXYZ"
-            Parameter { name: "x"; type: "double" }
-            Parameter { name: "y"; type: "double" }
-            Parameter { name: "z"; type: "double" }
-        }
-        Method {
-            name: "rotateJoint"
-            Parameter { name: "id"; type: "quint8" }
-            Parameter { name: "inversed"; type: "bool" }
-        }
-        Method {
-            name: "rotateJoint"
-            isCloned: true
-            Parameter { name: "id"; type: "quint8" }
-        }
-        Method {
-            name: "setJoint"
-            Parameter { name: "id"; type: "quint8" }
-            Parameter { name: "value"; type: "float" }
-        }
-        Method { name: "stay" }
-        Method {
-            name: "stay"
-            Parameter { name: "id"; type: "quint8" }
-        }
-        Method { name: "stop" }
-        Method { name: "goHome" }
-        Method {
-            name: "setSpeed"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "setAccel"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "setDecel"
-            Parameter { name: "value"; type: "double" }
-        }
-        Method {
-            name: "setGrabEnabled"
-            Parameter { name: "enable"; type: "bool" }
-        }
-        Method {
-            name: "setPompEnabled"
-            Parameter { name: "enable"; type: "bool" }
-        }
-        Method {
-            name: "setLaserEnabled"
-            Parameter { name: "enable"; type: "bool" }
-        }
-        Method {
-            name: "setPWM"
-            Parameter { name: "pin"; type: "quint8" }
-            Parameter { name: "value"; type: "quint8" }
-        }
-        Method { name: "repeatLastAction" }
-    }
-    Component {
-        file: "hobotsprotocolinterface.h"
-        name: "HobotsProtocolInterface"
-        accessSemantics: "reference"
-        prototype: "HobotInterface"
-        Signal { name: "messageAccepted" }
-    }
-    Component {
-        file: "httpinterface.h"
-        name: "HttpInterface"
-        accessSemantics: "reference"
-        prototype: "HobotsProtocolInterface"
-        exports: ["Hobots/HttpInterface 1.0"]
-        exportMetaObjectRevisions: [256]
-    }
-    Component {
         file: "mousehandler.h"
+        lineNumber: 7
         name: "MouseHandler"
         accessSemantics: "reference"
-        defaultProperty: "data"
-        parentProperty: "parent"
         prototype: "QQuickItem"
         exports: ["Hobots/MouseHandler 1.0"]
         exportMetaObjectRevisions: [256]
@@ -431,6 +339,7 @@ Module {
     }
     Component {
         file: "scriptbackend.h"
+        lineNumber: 12
         name: "ScriptBackend"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -480,6 +389,7 @@ Module {
     }
     Component {
         file: "windowcustomizer.h"
+        lineNumber: 16
         name: "WindowCustomizer"
         accessSemantics: "reference"
         prototype: "QObject"
