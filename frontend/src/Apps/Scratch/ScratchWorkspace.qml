@@ -163,6 +163,7 @@ Item {
                     stackBlock = null
                 }
             }
+            App.device.protocol.log(pos.x)
         }
         function blockDropped(block, pos) {
             if (pointContains(blocksPanel, pos)) {
@@ -287,6 +288,7 @@ Item {
         }
     }
     MultiEffect {
+        visible: false
         source: overlay
         scale: canvas.scale
         anchors.fill: overlay

@@ -11,12 +11,12 @@ INCLUDEPATH += \
 
 HEADERS += \
     $$PWD/appbackend.h \
-    $$PWD/interface.h
+    $$PWD/networkinterface.h
 
 SOURCES += \
-    $$PWD/interface.cpp \
     $$PWD/main.cpp \
-    $$PWD/appbackend.cpp
+    $$PWD/appbackend.cpp \
+    $$PWD/networkinterface.cpp
 
 resources.files += \
     $$PWD/main.qml \

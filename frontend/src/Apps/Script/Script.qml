@@ -296,6 +296,7 @@ C.AppWidget {
     }
     Connections {
         target: App.device.protocol
+        ignoreUnknownSignals: true
         function onGoalAchieved() {
             if (toolBar.status === C.ToolBar.Running) scriptBackend.next()
         }

@@ -39,6 +39,10 @@ Item {
             controls: [
                 Delay {}
             ]
+            sensors: [
+                PhxSonarDistance {},
+                ArucoId {}
+            ]
         }
     }
     Component {

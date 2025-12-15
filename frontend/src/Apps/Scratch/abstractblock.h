@@ -75,7 +75,9 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override {
         if (m_dragActive) {
             if (m_dragTarget) {
-                m_dragPos = event->globalPosition();
+                // на андроид существует баг, при отпускании экрана координаты улетают
+                if (event->globalPosition().x() < 50'000 && event->globalPosition().y() < 50'000) //8'388'608
+                    m_dragPos = event->globalPosition();
                 m_dragTarget->setPosition(m_canvas->mapFromGlobal(m_dragPos) - m_pressPoint);
                 emit dragMove(m_dragTarget, m_dragPos);
             }

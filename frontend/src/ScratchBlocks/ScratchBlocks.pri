@@ -4,4 +4,6 @@ resources.files += \
     $$PWD/SetPitch.qml \
     $$PWD/SetRoll.qml \
     $$PWD/SetYaw.qml \
-    $$PWD/Align.qml
+    $$PWD/Align.qml \
+    $$PWD/PhxSonarDistance.qml \
+    $$PWD/ArucoId.qml

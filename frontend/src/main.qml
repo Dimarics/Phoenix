@@ -9,7 +9,7 @@ Window {
     id: window
     width: 900
     height: 480
-    color: C.Style.lightWidgetColor
+    color: "#212830"
     visibility: Qt.platform.os === "wasm" ? Window.FullScreen : Window.Maximized
     //visibility: Window.FullScreen
     Component.onCompleted: {
@@ -18,7 +18,6 @@ Window {
     }
     Device {
         id: device
-        protocolName: "MAVLink"
     }
     /*C.JsonSettings {
         id: settings
@@ -33,7 +32,7 @@ Window {
     }*/
     Rectangle {
         //id: controlPanelBackground
-        color: C.Style.headerBackgroundColor
+        color: "#400080"
         width: parent.width; height: 28
     }
     T.Button {
@@ -43,9 +42,9 @@ Window {
         checkable: true
         icon.source: checked ? "qrc:/images/left-arrow.svg" : "qrc:/images/right-arrow.svg"
         icon.width: 7; icon.height: 12
-        icon.color: hovered ? "#00FFFF" : "white"
+        icon.color: hovered ? "white" : "white"
         background: Rectangle {
-            color: hideControlPanel.pressed ? "#32ffffff" : hideControlPanel.hovered ? "#1effffff" : "transparent"
+            color: hideControlPanel.pressed ? "#7346BE" : hideControlPanel.hovered ? "#5A3597" : "transparent"
             Behavior on color { ColorAnimation { duration: 100 } }
         }
         // Анимация
@@ -72,7 +71,11 @@ Window {
             width: parent.width - 28; height: 28
             horizontalAlignment: Text.AlignHCenter
         }
-        Rectangle { width: 2; height: parent.height; color: C.Style.darkBorderColor }
+        Rectangle { width: 2; height: parent.height; color: "#232323" }
+        Rectangle {
+            color: "#262E3C"
+            anchors.fill: controlPanelFlickable
+        }
         C.Flickable {
             id: controlPanelFlickable
             anchors { fill: parent; topMargin: 28; leftMargin: 2}

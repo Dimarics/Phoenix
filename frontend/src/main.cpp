@@ -5,6 +5,7 @@
 
 int main(int argc, char *argv[])
 {
+    //qputenv("QT_ENABLE_HIGHDPI_SCALING", "0");
     /*QGuiApplication *app = new QGuiApplication(argc, argv);
     qmlRegisterSingletonType<AppBackend>("App", 1, 0, "App", AppBackend::qmlInstance);
     QQmlApplicationEngine *engine = new QQmlApplicationEngine(app);

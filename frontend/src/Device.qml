@@ -1,31 +1,23 @@
 import QtQuick
 import Hobots
 import Components
+import App
 
-HobotDevice {
+QtObject {
     id: root
-    joints: [
-        Joint { min: -180; max: 180 },
-        Joint { min:    0; max: 180 },
-        Joint { min:    0; max: 360 },
-        Joint { min:    0; max: 360 },
-        Joint { min: -180; max: 180 },
-        Joint { min: -360; max: 180 }
-    ]
-    availableFeatures: [
-        HobotDevice.Joints,
-        HobotDevice.Speed,// HobotDevice.Accel,
-        HobotDevice.Grub
-    ]
-    availableProtocols: ["COM порт", "Точка доступа", "Локальная сеть"]
-    protocol: Interface {}
-    /*onProtocolNameChanged: {
-        var qml
-        switch(protocolName) {
-        case "MAVLink": qml = "import Hobots; MAVLinkInterface{}"; break
-        default: return
+    property real sonarDistance
+    property list<int> arucoIds
+    readonly property Connections connections: Connections {
+        target: protocol
+        ignoreUnknownSignals: true
+        function onSonarDistanceChanged(value: real) { sonarDistance = value; }
+        function onArucoIdsChanged(list: list<int>) { arucoIds = list
+            /*protocol.log("list begin")
+            for (let l of list) {
+                protocol.log(l)
+            }
+            protocol.log("list end")*/
         }
-        if (protocol) protocol.destroy()
-        protocol = Qt.createQmlObject(qml, this)
-    }*/
+    }
+    property QtObject protocol: NetworkInterface {}
 }

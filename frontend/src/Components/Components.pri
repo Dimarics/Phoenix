@@ -6,7 +6,7 @@ resources.files += \
     $$PWD/BorderRect.qml \
     $$PWD/Button.qml \
     $$PWD/ComboBox.qml \
-    $$PWD/CustomWindow.qml \
+    #$$PWD/CustomWindow.qml \
     $$PWD/Flickable.qml \
     $$PWD/HobotDevice.qml \
     $$PWD/Joint.qml \
@@ -32,10 +32,10 @@ HEADERS += \
     $$PWD/filepicker.h \
     $$PWD/firmwareloader.h \
     $$PWD/mousehandler.h \
-    $$PWD/windowcustomizer.h
+    #$$PWD/windowcustomizer.h
 
 SOURCES += \
     $$PWD/filepicker.cpp \
     $$PWD/firmwareloader.cpp \
     $$PWD/mousehandler.cpp \
-    $$PWD/windowcustomizer.cpp
+    #$$PWD/windowcustomizer.cpp

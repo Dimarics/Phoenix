@@ -1,12 +1,12 @@
 QT += core serialport websockets httpserver
 
+#CONFIG += ssl
+
 include(src/src.pri)
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-#INCLUDEPATH += include
 
 win32: {
     #RC_FILE = resources.rc
@@ -34,3 +34,6 @@ unix: {
     LIBS += -lopencv_features2d
     LIBS += -lopencv_flann
 }
+
+RESOURCES += \
+    resources.qrc

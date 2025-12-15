@@ -11,8 +11,8 @@ TextField {
     signal valueModified
     text: "0"
     implicitWidth: 85; implicitHeight: 25
-    color: Style.highlightTextColor
-    selectionColor: Style.textSelectionColor
+    color: "white"
+    selectionColor: "#FF80FF"
     font.pointSize: 11
     topPadding: 3
     verticalAlignment: TextInput.AlignVCenter
@@ -26,8 +26,8 @@ TextField {
     background: Rectangle {
         z: -1
         radius: height / 2
-        color: Style.darkWidgetColor
-        border.color: root.hovered || root.activeFocus? Style.lightBorderColor : Style.brightBorderColor
+        color: "#400080"
+        border.color: root.hovered || root.activeFocus? "#FF80FF" : "#7346BE"
         anchors.fill: parent
     }
     Keys.onReturnPressed: {

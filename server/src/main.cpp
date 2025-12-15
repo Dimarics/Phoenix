@@ -2,6 +2,9 @@
 #include "httpserver.h"
 #include "mavlinkinterface.h"
 #include <QCoreApplication>
+#ifdef QT_OS_LINUX
+#include <pigpio.h>
+#endif
 
 //#include <opencv2/objdetect/aruco_detector.hpp>
 
@@ -16,13 +19,18 @@ int main(int argc, char *argv[])
         cv::imwrite(std::string("D:/Development/Phoenix/markers/marker_") + std::to_string(i) + ".png", markerImage);
     }
     */
+#ifdef QT_OS_LINUX
+    qDebug() << gpioInitialise();
+#endif
 
     QCoreApplication app(argc, argv);
     //DomainManager domainManager("hobots-control");
     mavlinkInterface = new MAVLinkInterface(&app);
-    new ArucoDetector(&app);
     HttpServer server;
 
     return app.exec();
 
+#ifdef QT_OS_LINUX
+    gpioTerminate();
+#endif
 }

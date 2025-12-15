@@ -1,14 +1,25 @@
 INCLUDEPATH += \
     $$PWD \
-    $$PWD/MAVLink
+    $$PWD/MAVLink \
+    $$PWD/pigpio
+
+HEADERS += \
+    $$PWD/arucodetector.h \
+    $$PWD/httpserver.h \
+    $$PWD/mavlinkinterface.h \
+    $$PWD/sonar.h
 
 SOURCES += \
     $$PWD/arucodetector.cpp \
     $$PWD/main.cpp \
     $$PWD/httpserver.cpp \
-    $$PWD/mavlinkinterface.cpp
+    $$PWD/mavlinkinterface.cpp \
+    $$PWD/sonar.cpp
 
-HEADERS += \
-    $$PWD/arucodetector.h \
-    $$PWD/httpserver.h \
-    $$PWD/mavlinkinterface.h
+unix {
+    HEADERS += \
+        $$PWD/pigpio/pigpio.h
+
+    SOURCES += \
+        $$PWD/pigpio/pigpio.c
+}

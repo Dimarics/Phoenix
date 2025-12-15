@@ -158,7 +158,7 @@ void MAVLinkInterface::timerEvent(QTimerEvent *event)
         manual_control.buttons = 0;
         mavlink_msg_manual_control_encode(255, 0, &msg, &manual_control);
         */
-        ///new
+        /// new
         /*
         mavlink_msg_rc_channels_override_pack_chan(
                     255, 0, MAVLINK_COMM_0, &msg, 1, 1,
@@ -202,7 +202,6 @@ void MAVLinkInterface::timerEvent(QTimerEvent *event)
                     m_roll, m_pitch, m_throttle, m_yaw,
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                     );
-
 
         //mavlink_msg_manual_control_pack_chan(255, 0, MAVLINK_COMM_0, &msg, 1,
         //                                     0, 0, -m_thrust, 0,

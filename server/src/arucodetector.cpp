@@ -12,19 +12,21 @@ ArucoDetector::ArucoDetector(QObject *parent) : QObject(parent),
 
     m_timer->setInterval(1000.f / float(m_fps));
     connect(m_timer, &QTimer::timeout, this, [this] {
-        std::vector<int> markerIds;
+        std::vector<int> arucoIds;
         std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
         cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
         cv::aruco::DetectorParameters detectorParams = cv::aruco::DetectorParameters();
         cv::aruco::ArucoDetector detector(dictionary, detectorParams);
         cv::Mat frame;
         *m_videoCapture >> frame;
-        detector.detectMarkers(frame, markerCorners, markerIds, rejectedCandidates);
+        detector.detectMarkers(frame, markerCorners, arucoIds, rejectedCandidates);
         //cv::aruco::drawDetectedMarkers(frame, markerCorners, markerIds);
-        for (int marker_id : markerIds) {
-            if (marker_id == 4 && !mavlinkInterface->armed()) {
-                mavlinkInterface->arm();
-            }
+        m_arucoIds.clear();
+        for (int marker_id : arucoIds) {
+            m_arucoIds << marker_id;
+            //if (marker_id == 4 && !mavlinkInterface->armed()) {
+            //    mavlinkInterface->arm();
+            //}
         }
     });
     m_timer->start();

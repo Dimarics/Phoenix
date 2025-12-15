@@ -27,11 +27,10 @@ Q.Item {
                 strokeWidth: 3
                 //strokeColor: button.pressed ? Style.buttonPressedBorderColor :
                 //                       button.hovered ? Style.buttonHoveredBorderColor : Style.buttonBorderColor
-                strokeColor: Style.darkBorderColor
+                strokeColor: "#7346BE"
                 //fillColor: button.pressed ? Style.buttonPressedBackgroundColor :
                 //                     button.hovered ? Style.buttonHoveredBackgroundColor : Style.buttonBackgroundColor
-                fillColor: button.pressed ? Style.buttonPressedBackgroundColor :
-                                            button.hovered ? "#35FFFFFF" : Style.buttonBackgroundColor
+                fillColor: button.pressed ? "#7346BE" : button.hovered ? "#5A3597" : "#400080"
                 startX: root.width / 2; startY: root.height / 2
                 Q.PathAngleArc {
                     centerX: root.width / 2; centerY: root.height / 2
@@ -53,7 +52,7 @@ Q.Item {
         font.weight: Q.Font.DemiBold
         font.pointSize: 11
         font.family: joystickFont.font.family
-        color: parent.hovered ? Style.highlightTextColor : Style.textColor
+        color: parent.hovered ? "#FF80FF" : "white"
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
     }
@@ -106,8 +105,8 @@ Q.Item {
             strokeWidth: 3
             //strokeColor: button.pressed ? Style.buttonPressedBorderColor :
             //                       button.hovered ? Style.buttonHoveredBorderColor : Style.buttonBorderColor
-            strokeColor: Style.darkBorderColor
-            fillColor: "#204C80"
+            strokeColor: "#7346BE"
+            fillColor: "#400080"
             startX: root.width / 2; startY: root.height / 2
             Q.PathAngleArc {
                 centerX: root.width / 4; centerY: root.height / 4

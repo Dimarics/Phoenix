@@ -8,7 +8,7 @@ StackBlock {
     ScratchText { text: "аналоговый выход" }
     ValueInput { id: pin; state: ""; block: root }
     ScratchText { text: "значение" }
-    ValueInput { id: value; state: "int"; block: root }
+    ValueInput { id: value; state: ""; block: root }
     function cppCode(): string {
         return "analogWrite(%1, %2);\n".arg(pin.cppCode()).arg(value.cppCode()) + bottomSocket.cppCode()
     }

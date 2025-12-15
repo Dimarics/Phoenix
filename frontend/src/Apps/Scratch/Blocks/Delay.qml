@@ -7,7 +7,7 @@ StackBlock {
     borderColor: "#774DCB"
     fillColor: "#9966FF"
     ScratchText { text: "ждать" }
-    ValueInput { id: value; text: "1000"; block: delay }
+    ValueInput { id: value; text: "1000"; state: "double"; block: delay }
     ListItem { id: units; block: delay; model: ["миллисекунды", "секунды", "минуты"] }
     Timer {
         id: timer

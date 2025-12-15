@@ -1,9 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>frontend/qtloader.js</file>
-        <file>frontend/PhoenixFrontend.html</file>
-        <file>frontend/PhoenixFrontend.js</file>
-        <file>frontend/PhoenixFrontend.wasm</file>
-        <file>frontend/qtlogo.svg</file>
+        <file>ssl/certificate.crt</file>
+        <file>ssl/private.key</file>
     </qresource>
 </RCC>

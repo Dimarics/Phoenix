@@ -2,7 +2,7 @@ import QtQuick as T
 
 T.Text {
     id: root
-    color: Style.textColor
+    color: "white"
     property T.Item background: null
     //clip: true
     //antialiasing: false

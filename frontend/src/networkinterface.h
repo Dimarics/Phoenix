@@ -1,10 +1,10 @@
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef NETWORKINTERFACE_H
+#define NETWORKINTERFACE_H
 
 #include <QtQmlIntegration>
 #include <QNetworkAccessManager>
 
-class Interface : public QObject
+class NetworkInterface : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -26,7 +26,7 @@ public:
         PX4_MODE_AUTO_LOITER = 14,
         PX4_MODE_AUTO_FOLLOW = 15,
     };
-    Interface();
+    NetworkInterface();
     inline Q_INVOKABLE void arm() { postRequest("device/arm"); }
     inline Q_INVOKABLE void setThrottle(float value) { postRequest("device/setThrottle", QByteArray::number(value * 10.f + 1000)); }
     inline Q_INVOKABLE void setRoll(float value) { postRequest("device/setRoll", QByteArray::number(value * 5.f + 1500.f)); }
@@ -34,9 +34,18 @@ public:
     inline Q_INVOKABLE void setYaw(float value) { postRequest("device/setYaw", QByteArray::number(value * 5.f + 1500.f)); }
     inline Q_INVOKABLE void align() { postRequest("device/align"); }
 
+    inline Q_INVOKABLE void log(const QString &text) { postRequest("client/debug", text.toUtf8()); }
+
 private:
     QNetworkAccessManager *m_networkManager;
     void postRequest(const QString &url, const QByteArray &data = {});
+    template <typename Function>
+    void getRequest(const QString &url, Function &&func, const QByteArray &data = {});
+
+signals:
+    void sonarDistanceChanged(double value);
+    void arucoIdsChanged(const QList<int> &);
+
 };
 
-#endif // INTERFACE_H
+#endif // NETWORKINTERFACE_H

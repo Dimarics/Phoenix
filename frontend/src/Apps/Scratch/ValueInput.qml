@@ -48,7 +48,7 @@ Socket {
             }
             PropertyChanges {
                 target: textInput
-                validator: intValidator.createObject()
+                validator: intValidator.createObject(this)
             }
         },
         State {
@@ -60,7 +60,7 @@ Socket {
             }
             PropertyChanges {
                 target: textInput
-                validator: doubleValidator.createObject()
+                validator: doubleValidator.createObject(this)
             }
         }
     ]

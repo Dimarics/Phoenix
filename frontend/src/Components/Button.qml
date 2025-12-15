@@ -12,16 +12,14 @@ T.Button {
     //backgroundColor: Style.darkWidgetColor
     borderWidth: 2
     borderRadius: 8
-    backgroundColor: pressed ? Style.buttonPressedBackgroundColor :
-                               hovered ? Style.buttonHoveredBackgroundColor : Style.buttonBackgroundColor
-    borderColor: pressed ? Style.buttonPressedBorderColor :
-                           hovered ? Style.buttonHoveredBorderColor : Style.buttonBorderColor
+    backgroundColor: pressed ? "#7346BE" : hovered ? "#400080" : "#400080"
+    borderColor:     pressed ? "#7346BE" : hovered ? "#7346BE" : "#5A3597"
     width: 56; height: 56
     hoverEnabled: Qt.platform.os !== "android"
     scale: pressed ? 0.95 : 1
     display: T.AbstractButton.TextUnderIcon
     icon.width: 40; icon.height: 40
-    icon.color: pressed ? Style.buttonPressedTextColor : hovered ? Style.buttonHoveredTextColor : Style.buttonTextColor
+    icon.color: pressed ? "#FF80FF" : hovered ? "#FF80FF" : "#FFFFFF"
     Layout.preferredWidth: width; Layout.preferredHeight: height
     Layout.alignment: Qt.AlignCenter
     background: Rectangle {

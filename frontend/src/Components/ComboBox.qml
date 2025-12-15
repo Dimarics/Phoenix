@@ -16,16 +16,16 @@ T.ComboBox {
     leftPadding: 12; rightPadding: 12; topPadding: 4; bottomPadding: 4
     background: Q.Rectangle {
         radius: height / 2
-        color: Style.darkWidgetColor
+        color: "#400080"
         border.width: 1
-        border.color: enabled && hovered ? Style.lightBorderColor : Style.brightBorderColor //"#30FFFFFF"
+        border.color: enabled && hovered ? "#FF80FF" : "#7346BE"
         Q.Behavior on border.color { Q.ColorAnimation { duration: 100 } }
     }
     contentItem: Text {
         rightPadding: root.indicator.width + root.spacing
         text: root.displayText
         font: root.font
-        color: Style.highlightTextColor
+        color: "#FFFFFF"
     }
     indicator: ColorImage  {
         x: root.width - width - 10
@@ -49,7 +49,7 @@ T.ComboBox {
         leftPadding: root.leftPadding
         contentItem: Text {
             text: delegate.model[root.textRole]
-            color: Style.highlightTextColor
+            color: "#FFFFFF"
             font: root.font
         }
         background: Q.Rectangle {
@@ -58,7 +58,7 @@ T.ComboBox {
                 when: highlightedIndex === index
                 Q.PropertyChanges {
                     target: highlight
-                    color: Style.highlightBackgroundColor
+                    color: "#7346BE"
                     //border.color: Style.brightWidgetBorderColor
                 }
             }
