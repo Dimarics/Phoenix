@@ -6,7 +6,9 @@
 #include <QtQmlIntegration>
 #include <QQmlEngine>
 
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+#include <QHostAddress>
+#else
 #include <QtSerialPort/QSerialPortInfo>
 #endif
 
@@ -42,7 +44,15 @@ public:
     Q_INVOKABLE QByteArray readFile(const QUrl &url) const;
     Q_INVOKABLE QVariant readJSON(const QString &path) const;
     Q_INVOKABLE QVariant readJSON(const QUrl &url) const;
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+    inline void setWebServerPort(quint16 port) { m_webServerPort = port; }
+    inline void setWebServerAddress(QString address) { m_webServerAddress = address; }
+    inline quint16 webServerPort() const { return m_webServerPort; }
+    inline QString webServerAddress() const { return m_webServerAddress; }
+    static void setWebServerUrl(const std::string &href);
+    static void setWebServerAddress(const std::string &address);
+    inline QUrl webServerUrl() { return m_webServerUrl; }
+#else
     inline QStringList availablePorts() const { return m_serialPorts; }
     Q_INVOKABLE bool loadModel(const QString &lib_name) const;
 #endif
@@ -51,7 +61,11 @@ private:
     QString m_deviceName;
     QStringList m_availableDevices;
     QObject *m_device;
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+    quint16 m_webServerPort;
+    QString m_webServerAddress;
+    QUrl m_webServerUrl;
+#else
     QStringList m_serialPorts;
     QLibrary *m_model;
     void timerEvent(QTimerEvent*) override;
@@ -61,7 +75,9 @@ signals:
     void deviceNameChanged();
     void deviceChanged();
     void availableDevicesChanged();
-#ifndef __EMSCRIPTEN__
+#ifdef __EMSCRIPTEN__
+    void webServerAddressChanged(const QString &address);
+#else
     void availablePortsChanged();
 #endif
 };

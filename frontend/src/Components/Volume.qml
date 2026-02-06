@@ -19,7 +19,7 @@ Item {
         anchors.verticalCenter: root.verticalCenter
         onValueModified: {
             slider.value = numberField.value
-            valueModified()
+            root.valueModified()
         }
     }
     Slider {
@@ -28,10 +28,12 @@ Item {
         width: root.width - x
         anchors.verticalCenter: root.verticalCenter
         padding: 0
-        from: min; to: max
+        from: root.min; to: root.max
         onMoved: {
             numberField.value = slider.value
-            valueModified()
+        }
+        onPressedChanged: {
+            if (!pressed) root.valueModified()
         }
     }
 }

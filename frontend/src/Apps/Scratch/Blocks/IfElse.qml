@@ -99,6 +99,7 @@ ContentBlock {
         var newBlock = Qt.createComponent("IfElseBlock.qml").createObject(parent ?? root.parent)
         return newBlock
     }*/
+    //function empty(): bool { return !contentSocket.next && !elseSocket.next }
     function reset() { finished = false }
     function run() {
         if (finished) { completed(next); return }

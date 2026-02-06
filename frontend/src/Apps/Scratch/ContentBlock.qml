@@ -65,4 +65,5 @@ StackBlock {
         PathArc { x: 0; relativeY: -4; radiusX: 4; radiusY: 4 }
         PathLine { x: 0; y: 4 }
     }
+    function empty(): bool { return !contentSocket.next }
 }

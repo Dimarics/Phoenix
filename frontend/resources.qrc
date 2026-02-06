@@ -34,5 +34,6 @@
         <file>fonts/NotoSans-Regular.ttf</file>
         <file>images/logo-icon-contour.svg</file>
         <file>images/mode_3d.svg</file>
+        <file>images/fpv_mode.svg</file>
     </qresource>
 </RCC>

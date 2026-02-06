@@ -132,21 +132,36 @@ FilePicker::FilePicker(QObject *parent) : QObject(parent) {
 }
 
 void FilePicker::open() {
-    /*EM_ASM({
+    QByteArray accept;
+    for (const int &acceptableFile : m_nameFilters) {
+        switch (acceptableFile) {
+        case Text:
+            accept += "text/plain,";
+            break;
+        case JSON:
+            accept += "application/json,";
+            break;
+        default:
+            continue;
+        }
+    }
+    EM_ASM({
                const input = document.createElement('input');
                input.type = 'file';
+               input.accept = UTF8ToString($0);
                input.multiple = false;
                input.onchange = function(e) {
                    if (e.target.files.length > 0) {
                        const reader = new FileReader();
                        reader.onload = function(e) {
-                           new Module.FilePicker().getData($0, e.target.result);
+                           Module.readFile($1, e.target.result);
                        };
                        reader.readAsArrayBuffer(e.target.files[0]);
                    };
                };
                input.click();
-           }, reinterpret_cast<uintptr_t>(this));*/
+           }, accept.data(), reinterpret_cast<uintptr_t>(this));
+    /*
     EM_ASM({
                const tempButton = document.createElement('button');
                tempButton.onclick = async() => {
@@ -160,6 +175,7 @@ void FilePicker::open() {
                };
                tempButton.click();
            }, !m_nameFilters.contains(All), m_types.data(), this);
+    */
 }
 
 void FilePicker::save(const QByteArray &data)
@@ -174,7 +190,7 @@ void FilePicker::save(const QByteArray &data)
                a.download = UTF8ToString($1);
                a.click();
                URL.revokeObjectURL(url);
-           }, m_buffer.data(), m_selectedFile.data());
+           }, m_buffer.data(), m_selectedFile.toUtf8().data());
 }
 
 void FilePicker::saveAs(const QByteArray &data)

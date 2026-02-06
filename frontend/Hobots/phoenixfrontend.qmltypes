@@ -48,6 +48,15 @@ Module {
             notify: "overlayChanged"
             index: 3
         }
+        Property {
+            name: "dragTarget"
+            type: "AbstractBlock"
+            isPointer: true
+            read: "dragTarget"
+            write: "setDragTarget"
+            notify: "dragTargetChanged"
+            index: 4
+        }
         Signal { name: "clonableChanged" }
         Signal { name: "cursorShapeChanged" }
         Signal { name: "canvasChanged" }
@@ -55,24 +64,26 @@ Module {
         Signal { name: "dragTargetChanged" }
         Signal {
             name: "dragStart"
-            Parameter { type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "target"; type: "AbstractBlock"; isPointer: true }
         }
         Signal {
             name: "dragMove"
-            Parameter { type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "target"; type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "position"; type: "QPointF" }
         }
         Signal {
             name: "dropped"
-            Parameter { type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "target"; type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "position"; type: "QPointF" }
         }
         Signal {
             name: "clicked"
-            Parameter { type: "AbstractBlock"; isPointer: true }
+            Parameter { name: "target"; type: "AbstractBlock"; isPointer: true }
         }
     }
     Component {
         file: "appbackend.h"
-        lineNumber: 13
+        lineNumber: 15
         name: "AppBackend"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -121,18 +132,13 @@ Module {
             notify: "deviceChanged"
             index: 4
         }
-        Property {
-            name: "availablePorts"
-            type: "QStringList"
-            read: "availablePorts"
-            notify: "availablePortsChanged"
-            index: 5
-            isReadonly: true
-        }
         Signal { name: "deviceNameChanged" }
         Signal { name: "deviceChanged" }
         Signal { name: "availableDevicesChanged" }
-        Signal { name: "availablePortsChanged" }
+        Signal {
+            name: "webServerAddressChanged"
+            Parameter { name: "address"; type: "QString" }
+        }
         Method {
             name: "saveFile"
             isMethodConstant: true
@@ -168,21 +174,14 @@ Module {
             type: "QVariant"
             isMethodConstant: true
             Parameter { name: "url"; type: "QUrl" }
-        }
-        Method {
-            name: "loadModel"
-            type: "bool"
-            isMethodConstant: true
-            Parameter { name: "lib_name"; type: "QString" }
         }
     }
     Component {
         file: "filepicker.h"
-        lineNumber: 11
+        lineNumber: 93
         name: "FilePicker"
         accessSemantics: "reference"
-        prototype: "QQmlParserStatus"
-        interfaces: ["QQmlParserStatus"]
+        prototype: "QObject"
         exports: ["Hobots/FilePicker 1.0"]
         exportMetaObjectRevisions: [256]
         Enum {
@@ -261,10 +260,9 @@ Module {
         Signal { name: "nameFiltersChanged" }
         Signal {
             name: "fileReaded"
-            Parameter { name: "data"; type: "QByteArray" }
+            Parameter { name: "data"; type: "QString" }
         }
         Signal { name: "closed" }
-        Method { name: "fileHandler" }
         Method { name: "open" }
         Method {
             name: "save"
@@ -277,7 +275,7 @@ Module {
     }
     Component {
         file: "firmwareloader.h"
-        lineNumber: 10
+        lineNumber: 41
         name: "FirmwareLoader"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -303,6 +301,15 @@ Module {
             Parameter { name: "fqbn"; type: "QString" }
             Parameter { name: "board_options"; type: "QString" }
         }
+    }
+    Component {
+        file: "imageviewer.h"
+        lineNumber: 7
+        name: "ImageViewer"
+        accessSemantics: "reference"
+        prototype: "QQuickPaintedItem"
+        exports: ["Hobots/ImageViewer 1.0"]
+        exportMetaObjectRevisions: [256]
     }
     Component {
         file: "mousehandler.h"
@@ -338,8 +345,123 @@ Module {
         Signal { name: "cursorShapeChanged" }
     }
     Component {
+        file: "networkinterface.h"
+        lineNumber: 8
+        name: "NetworkInterface"
+        accessSemantics: "reference"
+        prototype: "QObject"
+        exports: ["Hobots/NetworkInterface 1.0"]
+        exportMetaObjectRevisions: [256]
+        Enum {
+            name: "PX4_MAIN_MODE"
+            values: [
+                "PX4_MAIN_MODE_MANUAL",
+                "PX4_MAIN_MODE_ALTCTL",
+                "PX4_MAIN_MODE_POSCTL",
+                "PX4_MAIN_MODE_AUTO",
+                "PX4_MAIN_MODE_ACRO",
+                "PX4_MAIN_MODE_OFFBOARD",
+                "PX4_MAIN_MODE_STABILIZED",
+                "PX4_MAIN_MODE_RATTITUDE",
+                "PX4_MAIN_MODE_SIMPLE"
+            ]
+        }
+        Signal {
+            name: "systemStatusChanged"
+            Parameter { name: "systemStatus"; type: "uint8_t" }
+        }
+        Signal {
+            name: "batteryRemainingChanged"
+            Parameter { name: "batteryRemaining"; type: "int8_t" }
+        }
+        Signal {
+            name: "modeChanged"
+            Parameter { name: "mode"; type: "uint8_t" }
+        }
+        Signal {
+            name: "armChanged"
+            Parameter { name: "state"; type: "bool" }
+        }
+        Signal {
+            name: "positionChanged"
+            Parameter { name: "x"; type: "float" }
+            Parameter { name: "y"; type: "float" }
+            Parameter { name: "z"; type: "float" }
+            Parameter { name: "roll"; type: "float" }
+            Parameter { name: "pitch"; type: "float" }
+            Parameter { name: "yaw"; type: "float" }
+        }
+        Signal {
+            name: "arucoIdsChanged"
+            Parameter { name: "arucoIds"; type: "int"; isList: true }
+        }
+        Signal {
+            name: "buttonStateChanged"
+            Parameter { name: "state"; type: "bool" }
+        }
+        Signal {
+            name: "sonarDistanceChanged"
+            Parameter { name: "value"; type: "double" }
+        }
+        Method {
+            name: "setMode"
+            Parameter { name: "modeName"; type: "QString" }
+        }
+        Method {
+            name: "armDisarm"
+            Parameter { name: "arm"; type: "bool" }
+        }
+        Method {
+            name: "takeoff"
+            Parameter { name: "z"; type: "float" }
+        }
+        Method { name: "land" }
+        Method { name: "drop" }
+        Method {
+            name: "setThrottlePWM"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setRollPWM"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setPitchPWM"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setYawPWM"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method { name: "align" }
+        Method {
+            name: "setX"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setY"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setZ"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "setYaw"
+            Parameter { name: "value"; type: "float" }
+        }
+        Method {
+            name: "holdOnMarker"
+            Parameter { name: "hold"; type: "bool" }
+        }
+        Method {
+            name: "log"
+            Parameter { name: "text"; type: "QString" }
+        }
+    }
+    Component {
         file: "scriptbackend.h"
-        lineNumber: 12
+        lineNumber: 55
         name: "ScriptBackend"
         accessSemantics: "reference"
         prototype: "QObject"
@@ -388,22 +510,12 @@ Module {
         Method { name: "next" }
     }
     Component {
-        file: "windowcustomizer.h"
-        lineNumber: 16
-        name: "WindowCustomizer"
+        file: "streamviewer.h"
+        lineNumber: 7
+        name: "StreamViewer"
         accessSemantics: "reference"
-        prototype: "QObject"
-        exports: ["Hobots/WindowCustomizer 1.0"]
+        prototype: "ImageViewer"
+        exports: ["Hobots/StreamViewer 1.0"]
         exportMetaObjectRevisions: [256]
-        Property {
-            name: "window"
-            type: "QWindow"
-            isPointer: true
-            read: "window"
-            write: "setWindow"
-            notify: "windowChanged"
-            index: 0
-        }
-        Signal { name: "windowChanged" }
     }
 }

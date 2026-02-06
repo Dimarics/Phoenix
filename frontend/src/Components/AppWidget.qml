@@ -33,7 +33,7 @@ Item {
     Component {
         id: saveFileDialog
         FilePicker {
-            title: "Открытие файла"
+            title: "Сохранение файла"
             fileMode: FilePicker.SaveFile
             selectedFile: root.currentFilePath
             nameFilters: root.saveNameFilters
@@ -55,13 +55,14 @@ Item {
             fileDialog.saveAs(saveData())
         }
     }
-
+    /*
     Connections {
         target: toolBar
         function onOpen() { openFileDialog.createObject(this) }
         function onSave() { root.save(root.currentFilePath) }
         function onSaveAs() { saveFileDialog.createObject(this) }
     }
+    */
     /*Component {
         id: openFileDialog
         FileDialog {

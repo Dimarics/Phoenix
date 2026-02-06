@@ -52,6 +52,7 @@ Q.Item {
                 onClicked: save()
             }
             Button {
+                visible: Qt.platform.os !== "wasm"
                 toolTip: "Сохранить как"
                 icon.source: "qrc:/images/save_as.svg"
                 icon.width: 36; icon.height: 36;

@@ -1,14 +1,18 @@
 #ifndef SONAR_H
 #define SONAR_H
 
-#ifdef QT_OS_LINUX
+#ifdef __arm_
 #include <pigpio.h>
 #include <thread>
+#include <QDebug>
 
 class Sonar
 {
 public:
-    Sonar(uint8_t trigPin, uint8_t echoPin) : m_trigPin(trigPin), m_echoPin(echoPin) {}
+    Sonar(uint8_t trigPin, uint8_t echoPin) : m_trigPin(trigPin), m_echoPin(echoPin) {
+        gpioSetMode(trigPin, PI_OUTPUT);
+        gpioSetMode(echoPin, PI_INPUT);
+    }
     void tick() {
         if (m_threadRunning) return;
         m_threadRunning = true;
@@ -46,6 +50,7 @@ public:
 
             double pulseDuration = (end - start) / 1'000'000.0;
             m_distance = (pulseDuration * SOUND_SPEED) / 2.0;
+            qDebug() << m_distance;
             m_threadRunning = false;
 
             if (m_distance < 20 || m_distance > 10'000) {

@@ -11,15 +11,18 @@ INCLUDEPATH += \
 
 HEADERS += \
     $$PWD/appbackend.h \
-    $$PWD/networkinterface.h
+    $$PWD/networkinterface.h \
+    $$PWD/streamviewer.h
 
 SOURCES += \
     $$PWD/main.cpp \
     $$PWD/appbackend.cpp \
-    $$PWD/networkinterface.cpp
+    $$PWD/networkinterface.cpp \
+    $$PWD/streamviewer.cpp
 
 resources.files += \
     $$PWD/main.qml \
     $$PWD/PhoenixApps.qml \
     $$PWD/ControlPanel.qml \
-    $$PWD/Device.qml
+    $$PWD/Device.qml \
+    $$PWD/FPV.qml

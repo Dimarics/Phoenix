@@ -28,9 +28,9 @@ T.ScrollBar {
     }
     contentItem: Rectangle {
         id: slider
-        implicitWidth: 8; implicitHeight: 8
-        radius: 4
-        color: "white"
+        implicitWidth: Style.scrollBarWidth; implicitHeight: Style.scrollBarWidth
+        radius: Style.scrollBarCornerRadius
+        color: Style.scrollBarColor
         opacity: scrollBar.pressed ? 0.45 : scrollBar.hovered ? 0.3 : 0.2
         Behavior on opacity { OpacityAnimator { duration: 300 } }
     }

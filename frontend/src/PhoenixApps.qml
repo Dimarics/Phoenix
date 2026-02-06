@@ -7,6 +7,8 @@ import Apps.Scratch.Blocks
 import Apps.Script
 import "ScratchBlocks"
 
+pragma ComponentBehavior: Bound
+
 Item {
     id: root
     property Item currentPage: setPage(appsMenu)
@@ -30,10 +32,14 @@ Item {
             availableModes: Scratch.Debug
             movement: [
                 Arm {},
-                SetThrottle {},
-                SetPitch {},
-                SetRoll {},
+                Disarm {},
+                Takeoff {},
+                Land {},
+                SetPoint {},
                 SetYaw {},
+                //SetThrottle {},
+                //SetPitch {},
+                //SetRoll {},
                 Align {}
             ]
             controls: [
@@ -41,6 +47,7 @@ Item {
             ]
             sensors: [
                 PhxSonarDistance {},
+                PhxButtonState {},
                 ArucoId {}
             ]
         }
@@ -50,6 +57,10 @@ Item {
         Script {}
     }
     Component {
+        id: fpv
+        FPV {}
+    }
+    Component {
         id: appsMenu
         RowLayout {
             spacing: 1
@@ -57,22 +68,28 @@ Item {
             //Layout.margins: 16
             //Layout.preferredWidth: apps.width; Layout.preferredHeight: apps.height
             ModeButton {
-                //id: scratchButton
                 text: "Scratch"
                 icon.source: "qrc:/images/scratch.svg"
                 icon.width: 160; icon.height: 160
-                onClicked: setPage(scratch)
+                onClicked: root.setPage(scratch)
             }
             ModeButton {
                 //visible: false
                 text: "Скрипт"
                 icon.source: "qrc:/images/script.svg"
                 icon.width: 160; icon.height: 160
-                onClicked: setPage(script)
+                onClicked: root.setPage(script)
+            }
+            ModeButton {
+                //visible: false
+                text: "FPV"
+                icon.source: "qrc:/images/fpv_mode.svg"
+                icon.width: 160; icon.height: 160
+                onClicked: root.setPage(fpv)
             }
         }
     }
-    function setPage(page) {
+    function setPage(page: Component): Item {
         if (currentPage) currentPage.destroy()
         currentPage = page.createObject(this, { 'anchors.fill': this })
         if (currentPage.exit) currentPage.exit.connect(() => setPage(appsMenu))

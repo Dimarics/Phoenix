@@ -11,10 +11,9 @@ TextField {
     signal valueModified
     text: "0"
     implicitWidth: 85; implicitHeight: 25
-    color: "white"
-    selectionColor: "#FF80FF"
+    color: Style.textFieldTextColor
+    selectionColor: Style.textFieldTextSelectionColor
     font.pointSize: 11
-    topPadding: 3
     verticalAlignment: TextInput.AlignVCenter
     horizontalAlignment: Text.AlignHCenter
     //clip: true
@@ -25,9 +24,9 @@ TextField {
     }
     background: Rectangle {
         z: -1
-        radius: height / 2
-        color: "#400080"
-        border.color: root.hovered || root.activeFocus? "#FF80FF" : "#7346BE"
+        radius: Style.textFieldCornerRadius
+        color: Style.textFieldBkgColor
+        border.color: root.hovered || root.activeFocus? Style.textFieldBorderHoverColor : Style.textFieldBorderColor
         anchors.fill: parent
     }
     Keys.onReturnPressed: {
@@ -40,6 +39,7 @@ TextField {
             if (newValue < min) newValue = min
             if (newValue > max) newValue = max
             value = newValue
+            valueModified()
         }
     }
     onValueChanged: {
@@ -54,5 +54,11 @@ TextField {
         //if (!regexp.test(text))
         text = text.replace(',', '.')
     }
-    function setValue(value) { if (!activeFocus) text = value.toFixed(decimals) }
+    function setValue(value) {
+        if (!activeFocus) {
+            if (value < min) value = min
+            if (value > max) value = max
+            root.value = value.toFixed(decimals)
+        }
+    }
 }

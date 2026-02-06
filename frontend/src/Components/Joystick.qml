@@ -24,13 +24,13 @@ Q.Item {
             preferredRendererType: Shape.CurveRenderer
             width: root.width; height: root.height
             ShapePath {
-                strokeWidth: 3
+                strokeWidth: Style.joystickBorderWidth
                 //strokeColor: button.pressed ? Style.buttonPressedBorderColor :
                 //                       button.hovered ? Style.buttonHoveredBorderColor : Style.buttonBorderColor
-                strokeColor: "#7346BE"
+                strokeColor: Style.joystickBorderColor
                 //fillColor: button.pressed ? Style.buttonPressedBackgroundColor :
                 //                     button.hovered ? Style.buttonHoveredBackgroundColor : Style.buttonBackgroundColor
-                fillColor: button.pressed ? "#7346BE" : button.hovered ? "#5A3597" : "#400080"
+                fillColor: button.pressed ? Style.joystickBkgPressedColor : button.hovered ? Style.joystickBkgHoverColor : Style.joystickBkgColor
                 startX: root.width / 2; startY: root.height / 2
                 Q.PathAngleArc {
                     centerX: root.width / 2; centerY: root.height / 2
@@ -52,7 +52,7 @@ Q.Item {
         font.weight: Q.Font.DemiBold
         font.pointSize: 11
         font.family: joystickFont.font.family
-        color: parent.hovered ? "#FF80FF" : "white"
+        color: parent.pressed ? Style.joystickTextPressedColor : parent.hovered ? Style.joystickTextHoverColor : Style.joystickTextColor
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
     }
@@ -102,11 +102,11 @@ Q.Item {
         preferredRendererType: Shape.CurveRenderer
         anchors.centerIn: parent
         ShapePath {
-            strokeWidth: 3
+            strokeWidth: Style.joystickBorderWidth
             //strokeColor: button.pressed ? Style.buttonPressedBorderColor :
             //                       button.hovered ? Style.buttonHoveredBorderColor : Style.buttonBorderColor
-            strokeColor: "#7346BE"
-            fillColor: "#400080"
+            strokeColor: Style.joystickBorderColor
+            fillColor: Style.joystickBkgColor
             startX: root.width / 2; startY: root.height / 2
             Q.PathAngleArc {
                 centerX: root.width / 4; centerY: root.height / 4

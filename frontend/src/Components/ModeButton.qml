@@ -18,7 +18,7 @@ Button {
         }
         Text {
             text: root.text
-            color: root.hovered ? "#FF80FF" : "white"
+            color: root.pressed ? Style.buttonTextPressedColor : root.hovered ? Style.buttonTextHoverColor : Style.buttonTextColor
             font.pointSize: Style.textSize
             //font.weight: Font.DemiBold
             horizontalAlignment: Text.AlignHCenter

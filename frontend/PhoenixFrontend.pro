@@ -1,6 +1,6 @@
 include(src/src.pri)
 
-QT += quick network
+QT += quick network websockets
 
 win32 {
     QT += serialport

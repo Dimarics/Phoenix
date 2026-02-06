@@ -1,25 +1,24 @@
 INCLUDEPATH += \
     $$PWD \
-    $$PWD/MAVLink \
-    $$PWD/pigpio
+    $$PWD/mavlink
 
 HEADERS += \
     $$PWD/arucodetector.h \
-    $$PWD/httpserver.h \
     $$PWD/mavlinkinterface.h \
-    $$PWD/sonar.h
+    $$PWD/pidcontroller.h \
+    $$PWD/pointtracker.h \
+    $$PWD/server.h \
+    $$PWD/sonar.h \
+    $$PWD/vehiclecontroller.h \
+    $$PWD/videocapture.h
 
 SOURCES += \
     $$PWD/arucodetector.cpp \
     $$PWD/main.cpp \
-    $$PWD/httpserver.cpp \
     $$PWD/mavlinkinterface.cpp \
-    $$PWD/sonar.cpp
-
-unix {
-    HEADERS += \
-        $$PWD/pigpio/pigpio.h
-
-    SOURCES += \
-        $$PWD/pigpio/pigpio.c
-}
+    $$PWD/pidcontroller.cpp \
+    $$PWD/pointtracker.cpp \
+    $$PWD/server.cpp \
+    $$PWD/sonar.cpp \
+    $$PWD/vehiclecontroller.cpp \
+    $$PWD/videocapture.cpp

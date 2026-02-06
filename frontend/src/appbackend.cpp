@@ -15,7 +15,42 @@ AppBackend::AppBackend() : m_availableDevices {
     startTimer(200);
 }
 #else
-AppBackend::AppBackend() : m_device(nullptr) {}
+
+//#include <QNetworkAccessManager>
+#include <emscripten.h>
+#include <emscripten/bind.h>
+
+EMSCRIPTEN_BINDINGS(appbackend) {
+    emscripten::function("setWebServerUrl", &AppBackend::setWebServerUrl);
+    emscripten::function("setWebServerAddress", &AppBackend::setWebServerAddress);
+}
+
+void AppBackend::setWebServerUrl(const std::string &href) {
+    AppBackend::instance()->m_webServerUrl = QUrl(QString::fromStdString(href));
+}
+
+void AppBackend::setWebServerAddress(const std::string &address)
+{
+    AppBackend::instance()->m_webServerAddress = QString::fromStdString(address);
+}
+
+AppBackend::AppBackend() : m_device(nullptr) {
+    /*
+    QNetworkAccessManager *networkManager = new QNetworkAccessManager(this);
+    networkManager->connectToHost(QHostAddress(QHostAddress::Any).toString(), 8080);
+    QNetworkReply *reply = networkManager->get(QNetworkRequest(""));
+    connect(reply, &QNetworkReply::finished, reply, [func, reply] {
+        func(reply->readAll());
+    });
+    */
+    QMetaObject::invokeMethod(this, [this]() {
+        EM_ASM({
+                   Module.setWebServerUrl(window.location.href);
+                   Module.setWebServerAddress(window.location.hostname)
+               });
+        emit webServerAddressChanged(m_webServerAddress);
+    }, Qt::QueuedConnection);
+}
 #endif
 
 void AppBackend::setAvailableDevices(const QStringList &availableDevices) {

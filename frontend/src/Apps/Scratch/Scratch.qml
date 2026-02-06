@@ -18,8 +18,10 @@ C.AppWidget {
     property list<BasicBlock> topLevelBlocks
     property list<BasicBlock> blocksWithContent
     objectName: "Scratch"
-    defaultFilePath: `${App.tempLocation}${App.deviceName}_Scratch.json`
+    defaultFilePath: Qt.platform.os !== "wasm" ? `${App.tempLocation}${App.deviceName}_Scratch.json` :
+                                                `${App.deviceName}_Scratch.json`
     openNameFilters: [FilePicker.JSON]
+    //Component.onCompleted: { App.device.protocol.log(scratch.defaultFilePath) }
     //openNameFilters: ["Файлы JSON (*.json)"]
     //onOpen: path => { if (workspace.open(path)) currentFilePath = path }
     //onSave: path => { currentFilePath = path; workspace.save(path)}
@@ -33,7 +35,7 @@ C.AppWidget {
             topLevelBlocks = workspace.topLevelBlocks()
             if (topLevelBlocks.length) {
                 currentBlock = topLevelBlocks.pop()
-                if (currentBlock.reset) {
+                if (currentBlock.reset/* && !currentBlock.empty()*/) {
                     currentBlock.reset()
                     blocksWithContent.push(currentBlock)
                 }
@@ -79,9 +81,11 @@ C.AppWidget {
         }
         Item { Layout.fillWidth: true }
         C.Text {
+            visible: Qt.platform.os !== "android" && Qt.platform.os !== "wasm"
             text: "режим:"
         }
         C.ComboBox {
+            visible: Qt.platform.os !== "android" && Qt.platform.os !== "wasm"
             model: {
                 var list = []
                 if (availableModes & Scratch.Debug) list.push("отладка")
@@ -129,7 +133,10 @@ C.AppWidget {
             //if (!toolBar.running) return
             currentBlock.glow = false
             if (next) {
-                if (next.reset) { next.reset(); blocksWithContent.push(next) }
+                if (next.reset/* && !next.empty()*/) {
+                    next.reset()
+                    blocksWithContent.push(next)
+                }
                 currentBlock = next
             } else {
                 if (blocksWithContent.length) {
@@ -137,7 +144,7 @@ C.AppWidget {
                     if (currentBlock.finished) blocksWithContent.pop()
                 } else if (topLevelBlocks.length) {
                     currentBlock = topLevelBlocks.pop()
-                    if (currentBlock.reset) {
+                    if (currentBlock.reset/* && !currentBlock.empty()*/) {
                         currentBlock.reset()
                         blocksWithContent.push(currentBlock)
                     }
@@ -147,7 +154,7 @@ C.AppWidget {
                 }
             }
             currentBlock.glow = true
-            Qt.callLater(() => currentBlock.run())
+            Qt.callLater(() => { if (currentBlock) currentBlock.run() })
         }
     }
     FirmwareLoader {

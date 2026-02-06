@@ -1,4 +1,6 @@
-QT += core serialport websockets httpserver
+QT += core serialport websockets httpserver widgets
+
+TARGET = PhoenixServer
 
 #CONFIG += ssl
 
@@ -19,10 +21,11 @@ win32: {
     #LIBS += -lopencv_video4120
     LIBS += -lopencv_videoio4120
     LIBS += -lopencv_objdetect4120
+    LIBS += -lopencv_calib3d4120
 }
 unix: {
-    INCLUDEPATH += /home/mes/OpenCV-4.12.0/include/opencv4
-    LIBS += -L/home/mes/OpenCV-4.12.0/lib
+    INCLUDEPATH += /home/phoenix/OpenCV-4.14.0/include/opencv4
+    LIBS += -L/home/phoenix/OpenCV-4.14.0/lib
     LIBS += -lopencv_core
     LIBS += -lopencv_highgui
     LIBS += -lopencv_imgcodecs
@@ -30,9 +33,11 @@ unix: {
     LIBS += -lopencv_videoio
     LIBS += -lopencv_objdetect
     LIBS += -lopencv_calib3d
-    LIBS += -lopencv_dnn
-    LIBS += -lopencv_features2d
-    LIBS += -lopencv_flann
+    #LIBS += -lopencv_dnn
+    #LIBS += -lopencv_features2d
+    #LIBS += -lopencv_flann
+
+    LIBS += -lpigpio
 }
 
 RESOURCES += \

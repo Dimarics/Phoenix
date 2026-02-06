@@ -5,15 +5,19 @@ import Components as C
 import Hobots
 import App
 
+//pragma ComponentBehavior: Bound
+
 C.AppWidget {
     id: root
-    /*enum Templates {
+    /*
+    enum Templates {
         Coordinates, Joints, Speed, Accel, Decel, Laser, Pomp, Grub, PWM//, Delay
     }
     property list<int> templates: [
         Script.Coordinates, Script.Joints, Script.Speed, Script.Laser,
         Script.Pomp, Script.Grub, Script.PWM//, Script.Delay
-    ]*/
+    ]
+    */
     defaultFilePath: `${App.tempLocation}${App.deviceName}_Script.txt`
     openNameFilters: {
         //console.log(ScriptBackend.Python)
@@ -48,7 +52,6 @@ C.AppWidget {
         onStop: {
             App.device.protocol.stop()
             scriptBackend.stop()
-            гоп_стоп()
         }
     }
     function open(path: string): bool {
@@ -82,10 +85,10 @@ C.AppWidget {
             C.Text {
                 id: commandListHeader
                 width: parent.width
-                text: "Hobots API"
+                text: "API"
                 padding: 4
                 horizontalAlignment: Text.AlignHCenter
-                background: Rectangle { color: C.Style.headerBackgroundColor }
+                background: Rectangle { color: C.Style.tabColor }
                 //anchors.topMargin: 12
             }
             ListView {
@@ -118,6 +121,7 @@ C.AppWidget {
                     }
                     onClicked: textEdit.insert(textEdit.cursorPosition, template)
                 }
+                /*
                 Component.onCompleted: {
                     for (let template of App.device.availableFeatures) {
                         //console.log(typeof(template), typeof(C.HobotDevice.Coordinates))
@@ -170,6 +174,7 @@ C.AppWidget {
                     }
                     model.append({"tip": "ждать", "template": "delay(msecs)"})
                 }
+                */
             }
         }
         C.SplitView {
@@ -213,7 +218,7 @@ C.AppWidget {
                         property int currentLine: 1
                         focus: true
                         color: "black"
-                        selectionColor: C.Style.textSelectionColor
+                        selectionColor: C.Style.listViewBkgHighlightColor
                         font.pointSize: 14
                         font.family: "consolas"
                         padding: 6//; leftPadding: 6
@@ -280,7 +285,7 @@ C.AppWidget {
                 textEdit: TextEdit {
                     id: terminal
                     readOnly: true
-                    color: "white"//"#00FFFF"
+                    color: C.Style.textHighlightColor
                     font.pointSize: C.Style.textSize
                     font.family: "consolas"
                     padding: 6; topPadding: -font.pointSize
@@ -288,7 +293,7 @@ C.AppWidget {
                     selectedTextColor: "black"
                 }
                 Rectangle {
-                    color: C.Style.darkWidgetColor
+                    color: C.Style.backgroundColor_2
                     anchors.fill: parent
                 }
             }

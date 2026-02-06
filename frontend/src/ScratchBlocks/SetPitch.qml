@@ -7,7 +7,7 @@ StackBlock {
     ScratchText { text: "задать тангаж" }
     ValueInput { id: value; block: root; state: "double"; min: -100; max: 100 }
     function run() {
-        App.device.protocol.setPitch(value.value())
+        App.device.protocol.setPitchPWM(value.value())
         completed(next)
     }
 }

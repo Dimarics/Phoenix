@@ -13,7 +13,7 @@ T.SplitView {
         implicitWidth: root.orientation === Qt.Horizontal ? 2 : root.width
         implicitHeight: root.orientation === Qt.Horizontal ? root.height : 2
         //color: "transparent"
-        color: Style.headerBackgroundColor
+        color: Style.backgroundColor_1
         //color: T.SplitHandle.pressed ? Style.darkBorderColor
         //    : (T.SplitHandle.hovered ? Style.brightBorderColor : Style.brightBorderColor)
     }

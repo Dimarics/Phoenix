@@ -10,16 +10,16 @@ T.Button {
     property alias borderColor: backgroundRect.border.color
     property alias toolTip: toolTip.text
     //backgroundColor: Style.darkWidgetColor
-    borderWidth: 2
-    borderRadius: 8
-    backgroundColor: pressed ? "#7346BE" : hovered ? "#400080" : "#400080"
-    borderColor:     pressed ? "#7346BE" : hovered ? "#7346BE" : "#5A3597"
+    borderWidth: Style.buttonBorderWidth
+    borderRadius: Style.buttonCornerRadius
+    backgroundColor: pressed ? Style.buttonBkgPressedColor : hovered ? Style.buttonBkgHoverColor : Style.buttonBkgColor
+    borderColor:     pressed ? Style.buttonBorderPressedColor : hovered ? Style.buttonBorderHoverColor : Style.buttonBorderColor
     width: 56; height: 56
     hoverEnabled: Qt.platform.os !== "android"
     scale: pressed ? 0.95 : 1
     display: T.AbstractButton.TextUnderIcon
     icon.width: 40; icon.height: 40
-    icon.color: pressed ? "#FF80FF" : hovered ? "#FF80FF" : "#FFFFFF"
+    icon.color: pressed ? Style.buttonTextPressedColor : hovered ? Style.buttonTextHoverColor : Style.buttonTextColor
     Layout.preferredWidth: width; Layout.preferredHeight: height
     Layout.alignment: Qt.AlignCenter
     background: Rectangle {

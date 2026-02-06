@@ -8,9 +8,9 @@ T.Slider {
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
         implicitWidth: 15; implicitHeight: 15
         radius: 4
-        color: "#7346BE"
+        color: Style.sliderHandleColor
         //border.width: control.visualFocus ? 2 : 1
-        border.color: "#232323"
+        border.color: Style.sliderHandleBorderColor
     }
     background: Rectangle {
         x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
@@ -20,15 +20,15 @@ T.Slider {
         width: control.horizontal ? control.availableWidth : implicitWidth
         height: control.horizontal ? implicitHeight : control.availableHeight
         radius: 3
-        color: "#400080"
-        border.color: "#232323"
+        color: Style.sliderVoidColor
+        border.color: Style.sliderBorderColor
         Rectangle {
             y: control.horizontal ? 0 : control.visualPosition * parent.height
             width: control.horizontal ? control.position * parent.width : 6
             height: control.horizontal ? 6 : control.position * parent.height
             radius: 3
-            color: "#5A3597"
-            border.color: "#232323"
+            color: Style.sliderFillColor
+            border.color: Style.sliderBorderColor
         }
     }
 }

@@ -1,0 +1,9 @@
+[Unit]
+After=network.target
+
+[Service]
+ExecStart=/home/phoenix/phoenix-server/PhoenixServer.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

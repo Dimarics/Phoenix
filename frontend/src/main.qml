@@ -32,7 +32,7 @@ Window {
     }*/
     Rectangle {
         //id: controlPanelBackground
-        color: "#400080"
+        color: C.Style.tabColor
         width: parent.width; height: 28
     }
     T.Button {
@@ -44,7 +44,7 @@ Window {
         icon.width: 7; icon.height: 12
         icon.color: hovered ? "white" : "white"
         background: Rectangle {
-            color: hideControlPanel.pressed ? "#7346BE" : hideControlPanel.hovered ? "#5A3597" : "transparent"
+            color: hideControlPanel.pressed ? "#7346BE" : hideControlPanel.hovered ? "#5A3597" : C.Style.tabColor
             Behavior on color { ColorAnimation { duration: 100 } }
         }
         // Анимация

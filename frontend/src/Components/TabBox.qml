@@ -8,7 +8,7 @@ Q.Rectangle {
     property list<string> model
     width: layout.implicitWidth; height: layout.implicitHeight
     radius: height / 2
-    color: Style.darkWidgetColor
+    color: Style.comboBoxBkgColor
     clip: true
     border.color: "transparent"
     Q.Component {
@@ -35,7 +35,7 @@ Q.Rectangle {
         x: layout.children[root.currentIndex] ? layout.children[root.currentIndex].x : 0
         width: 100; height: root.height
         radius: root.radius
-        color: Style.textSelectionColor//Style.brightWidgetBorderColor
+        color: Style.listViewBkgHighlightColor//Style.brightWidgetBorderColor
         //Q.Behavior on x { Q.NumberAnimation { duration: 300; easing.type: Q.Easing.InOutQuad } }
         Q.Behavior on x {
             enabled: false
