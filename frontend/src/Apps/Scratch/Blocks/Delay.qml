@@ -11,6 +11,7 @@ StackBlock {
     ListItem { id: units; block: delay; model: ["миллисекунды", "секунды", "минуты"] }
     Timer {
         id: timer
+        repeat: false
         onTriggered: {
             //console.log("delay %1".arg(interval))
             completed(next)

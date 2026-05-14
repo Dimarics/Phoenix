@@ -12,6 +12,21 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
     m_serialPort(new QSerialPort(this)),
     m_disconnectTimer(new QTimer(this))
 {
+    m_visionPos.x = 0;
+    m_visionPos.y = 0;
+    m_visionPos.z = 0;
+    m_visionPos.roll = 0;
+    m_visionPos.pitch = 0;
+    m_visionPos.yaw = 0;
+    std::memset(m_visionPos.covariance, 0, sizeof(m_covariance));
+    m_visionPos.covariance[0] = 1e6f; // x (y)
+    m_visionPos.covariance[6] = 1e6f; // y (x)
+    m_visionPos.covariance[11] = 1e6f; // z
+    //m_visionPos.covariance[15] = 1e6f; // roll
+    //m_visionPos.covariance[18] = 1e6f; // pitch
+    //m_visionPos.covariance[20] = 1e6f; // yaw
+    m_visionPos.reset_counter = 0;
+
     m_serialPort->setBaudRate(921600);
 
     connect(m_serialPort, &QSerialPort::readyRead, this, [this]() {
@@ -52,9 +67,13 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
                         qDebug() << "initialize system";
                         sendHeartbeat();
                         setMode(m_targetMode);
+
+                        mavlink_message_t msg;
+                        mavlink_msg_command_long_pack(m_systemId, m_componentId, &msg, m_targetSystemId, m_targetComponentId,
+                                                      MAV_CMD_SET_MESSAGE_INTERVAL, 0, MAVLINK_MSG_ID_ODOMETRY, 30'000, 0, 0, 0, 0, 0);
+                        sendMavlinkMessage(msg);
                     }
-                }
-                    break;
+                }   break;
                 case MAVLINK_MSG_ID_COMMAND_ACK: {
                     mavlink_command_ack_t ack;
                     mavlink_msg_command_ack_decode(&m_message, &ack);
@@ -86,9 +105,7 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
                     qDebug() << "Voltage" << sys_status.voltage_battery;
                     qDebug() << "Amperage" << sys_status.current_battery;
                     */
-
-                }
-                    break;
+                }   break;
                 case MAVLINK_MSG_ID_ATTITUDE: {
                     mavlink_attitude_t attitude;
                     mavlink_msg_attitude_decode(&m_message, &attitude);
@@ -96,9 +113,9 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
                     m_pitch = attitude.pitch;
                     //m_yaw = attitude.yaw;
                     //qDebug() << attitude.roll * 180 / M_PI << attitude.pitch * 180 / M_PI;
-                }
-                case MAVLINK_MSG_ID_LOCAL_POSITION_NED: {
+                }   break;
                     /*
+                case MAVLINK_MSG_ID_LOCAL_POSITION_NED: {
                     mavlink_local_position_ned_t lpn;
                     mavlink_msg_local_position_ned_decode(&m_message, &lpn);
                     qDebug() << "LOCAL POSITION NED:";
@@ -108,27 +125,28 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
                     qDebug() << "vx:" << QString::number(lpn.vx, 'f', 5);
                     qDebug() << "vy:" << QString::number(lpn.vy, 'f', 5);
                     qDebug() << "vz:" << QString::number(lpn.vz, 'f', 5);
+                }   break;
                     */
-                }
-                    break;
                 case MAVLINK_MSG_ID_ODOMETRY: {
                     mavlink_odometry_t odometry;
                     mavlink_msg_odometry_decode(&m_message, &odometry);
-                    m_vx = odometry.vx;
-                    m_vy = odometry.vy;
+                    m_vx = odometry.vy;
+                    m_vy = odometry.vx;
                     m_vz = -odometry.vz;
-/*
+                    m_odometry.x = odometry.y;
+                    m_odometry.y = odometry.x;
+                    m_odometry.z = -odometry.z;
+                    /*
                     qDebug() << "ODOMETRY:";
-                    qDebug() << "estimator_type:"<< odometry.estimator_type << MAV_FRAME_LOCAL_NED;
-                    qDebug() << "x:" << QString::number(odometry.x, 'f', 5);
-                    qDebug() << "y:" << QString::number(odometry.y, 'f', 5);
+                    //qDebug() << "estimator_type:"<< odometry.estimator_type << MAV_FRAME_LOCAL_NED;
+                    qDebug() << "x:" << QString::number(odometry.y, 'f', 5);
+                    qDebug() << "y:" << QString::number(odometry.x, 'f', 5);
                     qDebug() << "z:" << QString::number(odometry.z, 'f', 5);
-                    qDebug() << "vx:" << QString::number(odometry.vx, 'f', 5);
-                    qDebug() << "vy:" << QString::number(odometry.vy, 'f', 5);
+                    qDebug() << "vx:" << QString::number(odometry.vy, 'f', 5);
+                    qDebug() << "vy:" << QString::number(odometry.vx, 'f', 5);
                     qDebug() << "vz:" << QString::number(odometry.vz, 'f', 5);
-*/
-                }
-                    break;
+                    */
+                }   break;
                 case MAVLINK_MSG_ID_EXTENDED_SYS_STATE: {
                     mavlink_extended_sys_state_t state;
                     mavlink_msg_extended_sys_state_decode(&m_message, &state);
@@ -165,7 +183,7 @@ MAVLinkInterface::MAVLinkInterface(QObject *parent) : QObject(parent),
         qDebug() << error;
     });
     m_heartbeatTimerId = startTimer(1000);
-    m_positionTimerId = startTimer(20);
+    m_positionTimerId = startTimer(30);
     m_targetPosTimerId = startTimer(50);
 
     m_disconnectTimer->setInterval(3000);
@@ -265,7 +283,6 @@ void MAVLinkInterface::timerEvent(QTimerEvent *event)
                     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                     );
         */
-
         // manual control
         switch (m_mainMode) {
         case PX4_MAIN_MODE_STABILIZED: {
@@ -302,27 +319,60 @@ void MAVLinkInterface::timerEvent(QTimerEvent *event)
             mavlink_msg_odometry_encode(m_systemId, m_componentId, &msg_odom, &odometry);
             sendMavlinkMessage(msg_odom);
             */
-
-            // visual pos
-            mavlink_message_t msg_vio;
-            mavlink_vision_position_estimate_t pos_vio;
-            pos_vio.usec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-            // здесь x, y ставятся наоборот
-            pos_vio.x = m_y;
-            pos_vio.y = m_x;
-            pos_vio.z = -m_z;
-            pos_vio.roll = 0;
-            pos_vio.pitch = 0;
-            pos_vio.yaw = -m_yaw;
-            pos_vio.covariance[0] = NAN;
-            pos_vio.reset_counter = 0;
-            mavlink_msg_vision_position_estimate_encode(m_systemId, m_componentId, &msg_vio, &pos_vio);
-            sendMavlinkMessage(msg_vio);
         }
             break;
         default:
             break;
         }
+        // visual pos
+
+        /*
+        mavlink_message_t msg_vio;
+        mavlink_vision_position_estimate_t pos_vio;
+        pos_vio.usec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        // здесь x, y ставятся наоборот
+        pos_vio.x = m_y;
+        pos_vio.y = m_x;
+        pos_vio.z = -m_z;
+        pos_vio.roll = 0;
+        pos_vio.pitch = 0;
+        pos_vio.yaw = -m_yaw;
+        //pos_vio.covariance[0] = NAN;
+
+        std::memcpy(pos_vio.covariance, m_covariance, sizeof(m_covariance));
+        m_covariance[0] = 1e6f; // copter x (camera y)
+        m_covariance[1] = 1e6f; // copter y (camera x)
+        m_covariance[2] = 1e6f; // z
+        m_covariance[5] = 1e6f; // yaw
+
+        pos_vio.reset_counter = 0;
+        mavlink_msg_vision_position_estimate_encode(m_systemId, m_componentId, &msg_vio, &pos_vio);
+        sendMavlinkMessage(msg_vio);
+        */
+
+        mavlink_message_t msg_vio;
+        if (m_mainMode == PX4_MAIN_MODE_OFFBOARD && !m_armed) {
+            m_visionPos.x = 0;
+            m_visionPos.y = 0;
+            m_visionPos.z = 0;
+            m_visionPos.covariance[0] = 0;
+            m_visionPos.covariance[6] = 0;
+            m_visionPos.covariance[11] = 0;
+            m_visionPos.usec = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        }
+        //m_visionPos.covariance[0] = NAN;
+        mavlink_msg_vision_position_estimate_encode(m_systemId, m_componentId, &msg_vio, &m_visionPos);
+        sendMavlinkMessage(msg_vio);
+        // устанавливаем координаты vision pos равными координатам одометрии (костыль)
+        //m_visionPos.x = m_odometry.y;
+        //m_visionPos.y = m_odometry.x;
+        //m_visionPos.z = m_odometry.z;
+        // устанавливаем ковариацию большой до получения новых значений
+        m_visionPos.covariance[0] = 1e6f;
+        m_visionPos.covariance[6] = 1e6f;
+        m_visionPos.covariance[11] = 1e6f;
+        //m_visionPos.covariance[20] = 1e6f;
+
     } else if (event->timerId() == m_targetPosTimerId && m_serialPort->isOpen()) {
         // target pos
         mavlink_message_t msg_ned;
@@ -376,9 +426,7 @@ void MAVLinkInterface::takeoff(float z)
 {
     mavlink_message_t msg;
     mavlink_msg_command_long_pack(m_systemId, m_componentId, &msg, m_targetSystemId, m_targetComponentId,
-                                  MAV_CMD_NAV_TAKEOFF,
-                                  0, 0, 0, 0, 0,
-                                  0, 0, z); // coords
+                                  MAV_CMD_NAV_TAKEOFF, 0, 0, 0, 0, 0, 0, 0, z); // coords
     sendMavlinkMessage(msg);
 }
 
@@ -396,6 +444,96 @@ void MAVLinkInterface::drop()
     mavlink_msg_command_long_pack(m_systemId, m_componentId, &msg, m_targetSystemId, m_targetComponentId,
                                   MAV_CMD_COMPONENT_ARM_DISARM, 0, 0, 21196, 0, 0, 0, 0, 0);
     sendMavlinkMessage(msg);
+}
+
+void MAVLinkInterface::setX(float value) {
+    //m_x = value;
+    //m_covariance[1] = 0.001; // copter y (camera x)
+    m_visionPos.y = value;
+    m_visionPos.covariance[6] = 0.00; // copter y (camera x)
+}
+
+void MAVLinkInterface::setY(float value) {
+    //m_y = value;
+    //m_covariance[0] = 0.001; // copter x (camera y)
+    m_visionPos.x = value;
+    m_visionPos.covariance[0] = 0.00; // copter x (camera y)
+}
+
+void MAVLinkInterface::setZ(float value) {
+    //m_z = value;
+    //m_covariance[2] = 0.001;
+    m_visionPos.z = -value;
+    m_visionPos.covariance[11] = 0.00;
+    /*
+     * (    x, x), (    x, y), (    x, z), (    x, roll), (    x, pitch), (    x, yaw)
+     * (    y, x), (    y, y), (    y, z), (    y, roll), (    y, pitch), (    y, yaw)
+     * (    z, x), (    z, y), (    z, z), (    z, roll), (    z, pitch), (    z, yaw)
+     * ( roll, x), ( roll, y), ( roll, z), ( roll, roll), ( roll, pitch), ( roll, yaw)
+     * (pitch, x), (pitch, y), (pitch, z), (pitch, roll), (pitch, pitch), (pitch, yaw)
+     * (  yaw, x), (  yaw, y), (  yaw, z), (  yaw, roll), (  yaw, pitch), (  yaw, yaw)
+     */
+}
+
+void MAVLinkInterface::setYaw(float value) {
+    //m_yaw = value;
+    //m_covariance[5] = 0.001;
+    m_visionPos.yaw = -value;
+    m_visionPos.covariance[20] = 0.00;
+}
+
+void MAVLinkInterface::setPos(float x, float y, float z, float yaw, uint64_t timestamp) {
+    //m_x = x; m_y = y; m_z = z; m_yaw = yaw;
+    setX(x); setY(y); setZ(z); setYaw(yaw);
+    m_visionPos.usec = timestamp;
+}
+
+void MAVLinkInterface::setTargetX(float value) {
+    if (value < 0) value = 0;
+    if (value > 3000) value = 3000;
+    m_targetX = value;
+}
+
+void MAVLinkInterface::setTargetY(float value) {
+    if (value < 0) value = 0;
+    if (value > 3000) value = 3000;
+    m_targetY = value;
+}
+
+void MAVLinkInterface::setTargetZ(float value) { m_targetZ = value; }
+
+void MAVLinkInterface::setTargetYaw(float value) { m_targetYaw = value; }
+
+void MAVLinkInterface::setTargetPos(float x, float y, float z, float yaw) {
+    m_targetX = x; m_targetY = y; m_targetZ = z; m_targetYaw = yaw;
+}
+
+void MAVLinkInterface::setVelocities(float vx, float vy, float vz) {
+    m_targetVX = vx; m_targetVY = vy; m_targetVZ = vz;
+}
+
+void MAVLinkInterface::setPositionTargetTypeMask(uint16_t type_mask) {
+    m_positionTargetTypeMask = type_mask;
+}
+
+void MAVLinkInterface::setThrottlePWM(float value) {
+    value = value * 10.f + 1000;
+    m_throttlePWM = value < 1000 ? 1000 : value > 2000 ? 2000 : value;
+}
+
+void MAVLinkInterface::setRollPWM(float value) {
+    value = value * 5.f + 1500;
+    m_rollPWM = value < 1000 ? 1000 : value > 2000 ? 2000 : value;
+}
+
+void MAVLinkInterface::setPitchPWM(float value) {
+    value = value * 5.f + 1500;
+    m_pitchPWM = value < 1000 ? 1000 : value > 2000 ? 2000 : value;
+}
+
+void MAVLinkInterface::setYawPWM(float value) {
+    value = value * 5.f + 1500;
+    m_yawPWM = value < 1000 ? 1000 : value > 2000 ? 2000 : value;
 }
 
 void MAVLinkInterface::sendHeartbeat()

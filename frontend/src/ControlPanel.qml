@@ -44,6 +44,7 @@ Item {
                 model: [ "Stabilized", "Offboard" ]
                 Layout.preferredWidth: 120
                 onActivated: index => {
+                                 console.log(index)
                                  App.device.protocol.setMode(textAt(index))
                              }
             }

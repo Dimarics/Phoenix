@@ -10,6 +10,26 @@ import App
 C.AppWidget {
     id: root
     /*
+    TextEdit {
+        id: txt
+        anchors.fill: root
+        readOnly: false
+        activeFocusOnPress: true
+        text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        color: "white"
+        Rectangle {
+            anchors.fill: parent
+            z: -1
+            color: "black"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: txt.forceActiveFocus(Qt.MouseFocusReason)
+        }
+    }
+    */
+    /*
     enum Templates {
         Coordinates, Joints, Speed, Accel, Decel, Laser, Pomp, Grub, PWM//, Delay
     }
@@ -18,54 +38,60 @@ C.AppWidget {
         Script.Pomp, Script.Grub, Script.PWM//, Script.Delay
     ]
     */
+    property list<var> templates
     defaultFilePath: `${App.tempLocation}${App.deviceName}_Script.txt`
-    openNameFilters: {
-        //console.log(ScriptBackend.Python)
-        switch (scriptBackend.language) {
-        case ScriptBackend.Cpp:
-            return ["Файлы исходных текстов (*.cpp *.c)", "Текстовые файлы (*.txt)", "Все файлы (*.*)"]
-        case ScriptBackend.Python:
-            return ["Файлы скриптов Python (*.py)", "Текстовые файлы (*.txt)", "Все файлы (*.*)"]
-        default: return []
-        }
-    }
+    openNameFilters: [FilePicker.All]
     toolBar: C.ToolBar {
-        Item { Layout.fillWidth: true }
-        C.TabBox {
-            id: languageBox
-            model: ["C++", "Python"]
-            onCurrentIndexChanged: scriptBackend.language = currentIndex ? ScriptBackend.Python : ScriptBackend.Cpp
-            Component.onCompleted: scriptBackend.language = currentIndex ? ScriptBackend.Python : ScriptBackend.Cpp
-        }
-        Item { Layout.fillWidth: true }
         onClear: textEdit.text = ""
         onStart: {
-            scriptBackend.start()
-            //scriptBackend.messageHandler()
+            scriptController.start()
+            //scriptController.messageHandler()
         }
         onPause: {
             App.device.protocol.stay()
         }
         onResume: {
-            scriptBackend.messageHandler(scriptBackend.currentCommand)
+            scriptController.messageHandler(scriptController.currentCommand)
         }
         onStop: {
+            scriptController.stop()
             App.device.protocol.stop()
-            scriptBackend.stop()
         }
+        Item { Layout.fillWidth: true }
+        C.TabBox {
+            id: languageBox
+            model: ["C++", "Python"]
+            onCurrentIndexChanged: scriptController.language = currentIndex ? ScriptController.Python : ScriptController.Cpp
+            Component.onCompleted: scriptController.language = currentIndex ? ScriptController.Python : ScriptController.Cpp
+        }
+        Item { Layout.fillWidth: true }
     }
+    /*
     function open(path: string): bool {
         const text = App.readFile(path);
         if (!text) return false
         textEdit.text = text; return true
     }
     function save(path: string) { App.saveFile(textEdit.text, path) }
+    */
+    function open(data: string): bool {
+        textEdit.text = data
+    }
+    function saveData(): string {
+        return textEdit.text
+    }
+    function save(path: string) {
+        App.saveFile(textEdit.text, root.currentFilePath)
+    }
     C.JsonSettings {
         categories: [App.deviceName, "Script"]
         path: App.appDataLocation + "settings.json"
         property alias language: languageBox.currentIndex
         property alias currentPath: root.currentFilePath
-        onLoaded: if (!root.open(currentPath)) currentPath = root.defaultFilePath
+        onLoaded: {
+            if (!root.open(App.readFile(root.currentFilePath)))
+                root.currentFilePath = root.defaultFilePath
+        }
     }
     /*C.ComboBox {
         id: languageBox
@@ -116,10 +142,15 @@ C.AppWidget {
                         Behavior on scale { NumberAnimation { duration: 100 } }
                     }
                     background: Rectangle {
-                        color: delegate.hovered ? C.Style.highlightBackgroundColor : "transparent"
+                        color: delegate.hovered ? C.Style.listViewBkgHighlightColor : "transparent"
                         border.color: "transparent"
                     }
                     onClicked: textEdit.insert(textEdit.cursorPosition, template)
+                }
+                Component.onCompleted: {
+                    for (let template of root.templates) {
+                        model.append(template)
+                    }
                 }
                 /*
                 Component.onCompleted: {
@@ -222,8 +253,9 @@ C.AppWidget {
                         font.pointSize: 14
                         font.family: "consolas"
                         padding: 6//; leftPadding: 6
-                        Keys.onTabPressed: insert(cursorPosition, "    ")
+                        //Keys.onTabPressed: insert(cursorPosition, "    ")
                         //width: implicitWidth; height: implicitHeight
+                        /*
                         onCursorPositionChanged: {
                             var line = 1, pos = 0;
                             while ((pos = text.indexOf('\n', pos) + 1) > 0 && pos <= cursorPosition) {
@@ -231,6 +263,7 @@ C.AppWidget {
                             }
                             currentLine = line;
                         }
+                        */
                     }
                 }
                 /*C.Flickable {
@@ -280,21 +313,22 @@ C.AppWidget {
                     //onFlickEnded: textEdit.scrollToCursor()
                 }*/
             }
-            C.TextEditScroller {
+            Rectangle {
+                color: C.Style.backgroundColor_2
                 C.SplitView.preferredHeight: 200
-                textEdit: TextEdit {
-                    id: terminal
-                    readOnly: true
-                    color: C.Style.textHighlightColor
-                    font.pointSize: C.Style.textSize
-                    font.family: "consolas"
-                    padding: 6; topPadding: -font.pointSize
-                    selectionColor: "white"
-                    selectedTextColor: "black"
-                }
-                Rectangle {
-                    color: C.Style.backgroundColor_2
+                C.TextEditScroller {
+                    id: terminalScroller
                     anchors.fill: parent
+                    textEdit: TextEdit {
+                        id: terminal
+                        readOnly: true
+                        color: C.Style.textColor
+                        font.pointSize: C.Style.textSize
+                        font.family: "consolas"
+                        padding: 6; topPadding: -font.pointSize
+                        selectionColor: "#8000FF"//C.Style.textSelectionColor
+                        //selectedTextColor: "black"
+                    }
                 }
             }
         }
@@ -302,18 +336,20 @@ C.AppWidget {
     Connections {
         target: App.device.protocol
         ignoreUnknownSignals: true
-        function onGoalAchieved() {
-            if (toolBar.status === C.ToolBar.Running) scriptBackend.next()
+        function onReached() {
+            if (toolBar.status === C.ToolBar.Running) scriptController.next()
         }
     }
-    ScriptBackend {
-        id: scriptBackend
+    ScriptController {
+        id: scriptController
         property string currentCommand
         textDocument: textEdit.textDocument
         terminalDocument: terminal.textDocument
-        onFinished: toolBar.status = C.ToolBar.NotRunning//toolBar.running = false
-        onMessageReceived: message => messageHandler(message)
+        onCommandReceived: message => messageHandler(message)
+        onStateChanged: toolBar.status = state
+        //onFinished: toolBar.status = C.ToolBar.NotRunning
         function messageHandler(message) {
+            /*
             currentCommand = message
             var args = message.split(' ')
             switch(args[0]) {
@@ -331,6 +367,21 @@ C.AppWidget {
             case "moveX": case "moveY": case "moveZ": case "moveXY": case "moveXYZ": case "setJoint": break
             default: next(); break
             }
+            */
+            currentCommand = message
+            var args = message.split(' ')
+            root.commandsHandler(args[0], args)
         }
+    }
+    Timer {
+        id: delay_timer
+        repeat: false
+        onTriggered: next()
+    }
+    function commandsHandler(command, args) { }
+    function next() { scriptController.next() }
+    function delay(value) {
+        delay_timer.interval = value
+        delay_timer.restart()
     }
 }

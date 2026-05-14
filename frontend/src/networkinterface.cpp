@@ -9,7 +9,7 @@ NetworkInterface::NetworkInterface() :
 {
 #ifdef __EMSCRIPTEN__
     connect(AppBackend::instance(), &AppBackend::webServerAddressChanged, this, [this](const QString &address) {
-        m_webSocket->open(QUrl(QString("ws://%1:%2").arg(address).arg(8081)));
+        m_webSocket->open(QUrl(QString("ws://%1:%2/api").arg(address).arg(8081)));
     });
 #endif
     connect(m_webSocket, &QWebSocket::binaryMessageReceived, this, [this](const QByteArray &msg) {

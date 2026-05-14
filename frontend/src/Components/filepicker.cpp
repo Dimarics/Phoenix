@@ -141,6 +141,12 @@ void FilePicker::open() {
         case JSON:
             accept += "application/json,";
             break;
+        case CPP:
+            accept += "text/x-c,text/x-c++src";
+            break;
+        case Py:
+            accept += "text/py,";
+            break;
         default:
             continue;
         }
@@ -268,6 +274,10 @@ void FilePicker::setNameFilters(const QList<int> &nameFilters)
         case JSON:
             description = "Файлы JSON";
             accept["text/json"] = QJsonArray({".json"});
+            break;
+        case CPP:
+            description = "Файлы исходных текстов";
+            accept["text/cpp"] = QJsonArray({".cpp"});
             break;
         default:
             continue;

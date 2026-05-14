@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>ssl/certificate.crt</file>
         <file>ssl/private.key</file>
+        <file>script/phoenix.h</file>
+        <file>script/phoenix.py</file>
     </qresource>
 </RCC>

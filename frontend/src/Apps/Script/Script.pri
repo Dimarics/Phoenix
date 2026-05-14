@@ -7,9 +7,11 @@ resources.files += \
 HEADERS += \
     $$PWD/cpphighlighter.h \
     $$PWD/pythonhighlighter.h \
-    $$PWD/scriptbackend.h
+    $$PWD/scriptcontroller.h \
+    $$PWD/scriptworker.h
 
 SOURCES += \
     $$PWD/cpphighlighter.cpp \
     $$PWD/pythonhighlighter.cpp \
-    $$PWD/scriptbackend.cpp
+    $$PWD/scriptcontroller.cpp \
+    $$PWD/scriptworker.cpp

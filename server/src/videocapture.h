@@ -4,6 +4,7 @@
 #include "opencv2/videoio.hpp"
 #include <QObject>
 #include <QTimer>
+#include <thread>
 
 class VideoCapture : public QObject
 {
@@ -17,11 +18,14 @@ public:
 private:
     float m_fps;
     int m_emptyFrameCount;
+    std::thread m_cameraThread;
     QTimer *m_timer;
     cv::VideoCapture *m_videoCapture;
+    cv::Mat m_frame;
+    void cameraLoop();
 
 signals:
-    void frameChanged(const cv::Mat &frame);
+    void frameChanged(cv::Mat frame, uint64_t timestamp);
 };
 
 #endif // VIDEOCAPTURE_H

@@ -11,10 +11,12 @@ INCLUDEPATH += \
 
 HEADERS += \
     $$PWD/appbackend.h \
+    $$PWD/appeventfilter.h \
     $$PWD/networkinterface.h \
     $$PWD/streamviewer.h
 
 SOURCES += \
+    $$PWD/appeventfilter.cpp \
     $$PWD/main.cpp \
     $$PWD/appbackend.cpp \
     $$PWD/networkinterface.cpp \

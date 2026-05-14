@@ -89,8 +89,9 @@ protected:
         }
     }
     void mouseUngrabEvent() override {
-        m_dragActive = false;
         QGuiApplication::restoreOverrideCursor();
+        if (!m_dragActive) return;
+        m_dragActive = false;
         emit dropped(m_dragTarget, m_dragPos);
     }
 

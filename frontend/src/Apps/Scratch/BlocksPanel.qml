@@ -170,6 +170,7 @@ Item {
             }
         }
     }
+    /*
     DropArea {
         anchors.fill: parent
         Rectangle {
@@ -202,6 +203,7 @@ Item {
             drop.source.destruct()
         }
     }
+    */
     Component.onCompleted: {
         function connectChildren(object) {
             for (let child of object.children) {

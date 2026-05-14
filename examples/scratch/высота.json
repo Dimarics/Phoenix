@@ -1,0 +1,208 @@
+{
+    "app": "Scratch",
+    "device": "Phoenix",
+    "contentX": 1234.6662902832031,
+    "contentY": 1400.9532063802094,
+    "stacks": [
+        {
+            "name": "Delay",
+            "data": [
+                "1000",
+                [
+                    "миллисекунды",
+                    "секунды",
+                    "минуты"
+                ],
+                0
+            ],
+            "plugs": [
+                {
+                    "name": "../../../ScratchBlocks/Takeoff",
+                    "data": [
+                        "1000"
+                    ],
+                    "plugs": [
+                        {
+                            "name": "Delay",
+                            "data": [
+                                "10",
+                                [
+                                    "миллисекунды",
+                                    "секунды",
+                                    "минуты"
+                                ],
+                                1
+                            ],
+                            "plugs": [
+                                {
+                                    "name": "../../../ScratchBlocks/SetYaw",
+                                    "data": [
+                                        "0"
+                                    ],
+                                    "plugs": [
+                                        {
+                                            "name": "Delay",
+                                            "data": [
+                                                "1",
+                                                [
+                                                    "миллисекунды",
+                                                    "секунды",
+                                                    "минуты"
+                                                ],
+                                                1
+                                            ],
+                                            "plugs": [
+                                                {
+                                                    "name": "../../../ScratchBlocks/SetPoint",
+                                                    "data": [
+                                                        "1500",
+                                                        "1500",
+                                                        "800"
+                                                    ],
+                                                    "plugs": [
+                                                        {
+                                                            "name": "Delay",
+                                                            "data": [
+                                                                "5",
+                                                                [
+                                                                    "миллисекунды",
+                                                                    "секунды",
+                                                                    "минуты"
+                                                                ],
+                                                                1
+                                                            ],
+                                                            "plugs": [
+                                                                {
+                                                                    "name": "../../../ScratchBlocks/SetPoint",
+                                                                    "data": [
+                                                                        "1500",
+                                                                        "1500",
+                                                                        "1200"
+                                                                    ],
+                                                                    "plugs": [
+                                                                        {
+                                                                            "name": "Delay",
+                                                                            "data": [
+                                                                                "5",
+                                                                                [
+                                                                                    "миллисекунды",
+                                                                                    "секунды",
+                                                                                    "минуты"
+                                                                                ],
+                                                                                1
+                                                                            ],
+                                                                            "plugs": [
+                                                                                {
+                                                                                    "name": "../../../ScratchBlocks/SetPoint",
+                                                                                    "data": [
+                                                                                        "1500",
+                                                                                        "1500",
+                                                                                        "1500"
+                                                                                    ],
+                                                                                    "plugs": [
+                                                                                        {
+                                                                                            "name": "Delay",
+                                                                                            "data": [
+                                                                                                "5",
+                                                                                                [
+                                                                                                    "миллисекунды",
+                                                                                                    "секунды",
+                                                                                                    "минуты"
+                                                                                                ],
+                                                                                                1
+                                                                                            ],
+                                                                                            "plugs": [
+                                                                                                {
+                                                                                                    "name": "../../../ScratchBlocks/SetPoint",
+                                                                                                    "data": [
+                                                                                                        "1500",
+                                                                                                        "1500",
+                                                                                                        "1700"
+                                                                                                    ],
+                                                                                                    "plugs": [
+                                                                                                        {
+                                                                                                            "name": "Delay",
+                                                                                                            "data": [
+                                                                                                                "5",
+                                                                                                                [
+                                                                                                                    "миллисекунды",
+                                                                                                                    "секунды",
+                                                                                                                    "минуты"
+                                                                                                                ],
+                                                                                                                1
+                                                                                                            ],
+                                                                                                            "plugs": [
+                                                                                                                {
+                                                                                                                    "name": "../../../ScratchBlocks/SetPoint",
+                                                                                                                    "data": [
+                                                                                                                        "1500",
+                                                                                                                        "1500",
+                                                                                                                        "1000"
+                                                                                                                    ],
+                                                                                                                    "plugs": [
+                                                                                                                        {
+                                                                                                                            "name": "Delay",
+                                                                                                                            "data": [
+                                                                                                                                "5",
+                                                                                                                                [
+                                                                                                                                    "миллисекунды",
+                                                                                                                                    "секунды",
+                                                                                                                                    "минуты"
+                                                                                                                                ],
+                                                                                                                                1
+                                                                                                                            ],
+                                                                                                                            "plugs": [
+                                                                                                                                {
+                                                                                                                                    "name": "../../../ScratchBlocks/Land",
+                                                                                                                                    "data": [],
+                                                                                                                                    "plugs": [],
+                                                                                                                                    "index": 1
+                                                                                                                                }
+                                                                                                                            ],
+                                                                                                                            "index": 3
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "index": 1
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "index": 3
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    "index": 1
+                                                                                                }
+                                                                                            ],
+                                                                                            "index": 3
+                                                                                        }
+                                                                                    ],
+                                                                                    "index": 1
+                                                                                }
+                                                                            ],
+                                                                            "index": 3
+                                                                        }
+                                                                    ],
+                                                                    "index": 1
+                                                                }
+                                                            ],
+                                                            "index": 3
+                                                        }
+                                                    ],
+                                                    "index": 1
+                                                }
+                                            ],
+                                            "index": 1
+                                        }
+                                    ],
+                                    "index": 1
+                                }
+                            ],
+                            "index": 1
+                        }
+                    ],
+                    "index": 1
+                }
+            ],
+            "x": 1723.9461669921875,
+            "y": 1195.5465393066406
+        }
+    ]
+}

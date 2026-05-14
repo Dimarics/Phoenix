@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 //import Hobots
+import App
 import Components
 import Apps.Scratch
 import Apps.Scratch.Blocks
@@ -54,7 +55,78 @@ Item {
     }
     Component {
         id: script
-        Script {}
+        Script {
+            templates: [
+                //{ "tip": "значение x", "template": "x()" },
+                //{ "tip": "значение y", "template": "y()" },
+                //{ "tip": "значение z", "template": "z()" },
+                //{ "tip": "двигаться по x", "template": "moveX(value)" },
+                //{ "tip": "двигаться по x", "template": "moveX(value)" },
+                //{ "tip": "двигаться по y", "template": "moveY(value)" },
+                //{ "tip": "двигаться по z", "template": "moveZ(value)" },
+                //{ "tip": "перейти в точку x, y", "template": "moveXY(x, y)"},
+                { "tip": "включить моторы", "template": "arm()"},
+                { "tip": "выключить моторы", "template": "disarm()"},
+                { "tip": "взлёт", "template": "takeoff(значение в метрах)"},
+                { "tip": "посадка", "template": "land()"},
+                { "tip": "перейти в точку x, y, z", "template": "setPoint(x, y, z в миллиметрах)" },
+                { "tip": "установить рысканье", "template": "setYaw(значение в градусах)"},
+                { "tip": "выровняться", "template": ""},
+                { "tip": "ждать", "template": "delay(значение в миллисекундах)"}
+            ]
+            function commandsHandler(command, args) {
+                switch(command) {
+                    /*
+                case "moveX":
+                    App.device.protocol.setX(args[1])
+                    next()
+                    break;
+                case "moveY":
+                    App.device.protocol.setY(args[1])
+                    break;
+                case "moveZ":
+                    App.device.protocol.setZ(args[1])
+                    break;
+                case "moveXY":
+                    App.device.protocol.setX(args[1])
+                    App.device.protocol.setY(args[2])
+                    break;
+                case "setPoint":
+                    App.device.protocol.setX(args[1])
+                    App.device.protocol.setY(args[1])
+                    App.device.protocol.setZ(args[1])
+                    break;
+                    */
+                case "arm":
+                    App.device.protocol.armDisarm(true)
+                    break;
+                case "disarm":
+                    App.device.protocol.armDisarm(false)
+                    break;
+                case "takeoff":
+                    App.device.protocol.takeoff(args[1] / 1000)
+                    break;
+                case "land":
+                    App.device.protocol.land()
+                    break;
+                case "setPoint":
+                    App.device.protocol.setX(args[1] / 1000)
+                    App.device.protocol.setY(args[2] / 1000)
+                    App.device.protocol.setZ(args[3] / 1000)
+                    break;
+                case "setYaw":
+                    App.device.protocol.setYaw(args[1])
+                    break;
+                case "align":
+                    App.device.protocol.align()
+                    break;
+                case "delay":
+                    delay(args[1])
+                    break;
+                }
+                if (command != "delay") next()
+            }
+        }
     }
     Component {
         id: fpv

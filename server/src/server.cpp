@@ -84,15 +84,11 @@ Server::Server(QObject *parent) : QObject(parent),
     connect(m_webSocketServer, &QWebSocketServer::newConnection, this, [this] {
         if (!m_webSocketServer->hasPendingConnections()) return;
         QWebSocket *socket = m_webSocketServer->nextPendingConnection();
+        socket->setParent(this);
         qDebug() << "new connection:" << socket;
-        if (socket->requestUrl().path() == "/followStream") { // setup video stream
-            m_streamFollowers << socket;
-            connect(socket, &QWebSocket::disconnected, this, [socket, this] {
-                m_streamFollowers.removeOne(socket);
-                m_streamFollowers.squeeze();
-                qDebug() << socket << "disconnected";
-            });
-        } else {
+        /*
+        if (socket->requestUrl().path() == "/api") {
+            socket->setParent(this);
             m_clients << socket;
             connect(socket, &QWebSocket::binaryMessageReceived, this, &Server::messageReceived);
             connect(socket, &QWebSocket::disconnected, this, [socket, this] {
@@ -100,10 +96,34 @@ Server::Server(QObject *parent) : QObject(parent),
                 m_clients.squeeze();
                 qDebug() << socket << "disconnected";
             });
+        } else if (socket->requestUrl().path() == "/followStream") { // setup video stream
+            m_streamFollowers << socket;
+            connect(socket, &QWebSocket::disconnected, this, [socket, this] {
+                m_streamFollowers.removeOne(socket);
+                m_streamFollowers.squeeze();
+                qDebug() << socket << "disconnected";
+            });
         }
+        */
+        if (socket->requestUrl().path() == "/api") {
+            connect(socket, &QWebSocket::binaryMessageReceived, this, &Server::messageReceived);
+            connect(this, &Server::sendDataToClients, socket, &QWebSocket::sendBinaryMessage);
+        } else if (socket->requestUrl().path() == "/followStream") {
+            connect(this, &Server::sendVideoFrame, socket, &QWebSocket::sendBinaryMessage);
+        } else if (socket->requestUrl().path() == "/script") {
+            connect(socket, &QWebSocket::binaryMessageReceived, this, &Server::scriptMessageReceived);
+            connect(this, &Server::sendScriptMessage, socket, &QWebSocket::sendBinaryMessage);
+        }
+        connect(socket, &QWebSocket::disconnected, this, [socket] {
+            qDebug() << socket << "disconnected";
+            socket->deleteLater();
+        });
     });
 }
 
+Server::~Server() {}
+
+/*
 void Server::sendDataToClients(const QByteArray &data)
 {
     for (QWebSocket *&socket : m_clients) {
@@ -117,3 +137,4 @@ void Server::sendVideoFrame(const QByteArray &frame)
         socket->sendBinaryMessage(frame);
     }
 }
+*/

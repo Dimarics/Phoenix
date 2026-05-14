@@ -18,6 +18,7 @@ public:
     void detectMarkers(const cv::Mat &frame);
     void drawDetectMarkers(cv::Mat &image);
     inline QList<int> arucoIds() const { return m_qListArucoIds; }
+    inline bool markersInView() const { return m_qListArucoIds.size(); }
 
 private:
     bool m_holdOnMarker = true;

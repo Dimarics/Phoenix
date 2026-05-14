@@ -100,6 +100,7 @@ signals:
     void batteryRemainingChanged(int8_t batteryRemaining);
     void modeChanged(uint8_t mode);
     void armChanged(bool state);
+    void reached();
     void positionChanged(float x, float y, float z, float roll, float pitch, float yaw);
     void arucoIdsChanged(const QList<int> &arucoIds);
     void buttonStateChanged(bool state);

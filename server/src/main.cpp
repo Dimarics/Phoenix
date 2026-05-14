@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     //HttpServer server;
     VehicleController controller;
     int exit_code = app.exec();
+    //qDebug() << "exit code:" << exit_code;
 #ifdef __arm__
     gpioTerminate();
 #endif

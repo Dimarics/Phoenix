@@ -104,4 +104,45 @@ Window {
         anchors { top: appsHeader.bottom; left: parent.left; right: controlPanel.left; bottom: parent.bottom }
         PhoenixApps { id: phoenix_apps }
     }
+/*
+    Shortcut {
+        sequence: "W"
+        onActivated: console.log("W")
+    }
+    Shortcut {
+        sequence: "S"
+        onActivated: console.log("W")
+    }
+    Shortcut {
+        sequence: "A"
+        onActivated: console.log("W")
+    }
+    Shortcut {
+        sequence: "D"
+        onActivated: console.log("W")
+    }
+    Shortcut {
+        sequence: "Space"
+        onActivated: console.log("space")
+    }
+*/
+    /*
+    Shortcut {
+        sequence: "W"
+        autoRepeat: false
+        onActivated: {console.log("event.key"); key_controller.forceActiveFocus()}
+    }
+    Item {
+        id: key_controller
+    }
+    */
+    /*
+    Keys.onReleased: (event)=> {
+        console.log(event.key);
+        if (event.key == Qt.Key_Left) {
+            console.log("move left");
+            event.accepted = true;
+        }
+    }
+    */
 }

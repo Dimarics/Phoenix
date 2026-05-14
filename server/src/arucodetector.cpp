@@ -1,5 +1,4 @@
 #include "arucodetector.h"
-#include "qdatetime.h"
 //#include "qdebug.h"
 //#include <QMatrix3x3>
 //#include <QQuaternion>
@@ -72,7 +71,7 @@ void ArucoDetector::holdOnMarker(bool hold)
 void ArucoDetector::detectMarkers(const cv::Mat &image)
 {
     std::vector<std::vector<cv::Point2f>> rejectedCandidates;
-    cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_100);
+    cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_4X4_1000);
     cv::aruco::DetectorParameters detectorParams = cv::aruco::DetectorParameters();
     cv::aruco::ArucoDetector detector(dictionary, detectorParams);
     detector.detectMarkers(image, m_markerCorners, m_arucoIds, rejectedCandidates);
@@ -227,20 +226,6 @@ void ArucoDetector::detectMarkers(const cv::Mat &image)
             //xList << pos.x() + (m_arucoIds[i] % side) * offset;
             //yList << pos.y() + (m_arucoIds[i] / side) * offset;
             //zList << pos.z();
-
-            static quint64 timer = QDateTime::currentDateTime().toMSecsSinceEpoch();
-            if (QDateTime::currentDateTime().toMSecsSinceEpoch() - timer >= 200) {
-                //qDebug() << "roll" << euler.x() << "d:" << tvec[2] * tan(euler.y() * M_PI / 180.f);
-                //qDebug() << "roll" << euler.y() << "pitch" << euler.x() << "yaw" << euler.z() << '\n';
-                //qDebug() << "x" << pos.x() * 100 << "y" << pos.y() * 100 << "z" << pos.z() * 100 << '\n';
-                /*
-                if (m_arucoIds[i] == 99) {
-                    qDebug() << "==========================";
-                    qDebug() << "x" << tvec[0] * 100;
-                    qDebug() << "y" << tvec[1] * 100;
-                }
-                */
-            }
 
             yawList << atan2(r_mat.at<double>(1,0), r_mat.at<double>(0,0));
 

@@ -6,6 +6,8 @@ Flickable {
     clip: true
     contentWidth: Math.max(textEdit.implicitWidth, root.width)
     contentHeight: Math.max(textEdit.implicitHeight, root.height)
+    boundsMovement: Flickable.StopAtBounds
+    boundsBehavior: Flickable.DragAndOvershootBounds
     Q.Behavior on contentX { Q.NumberAnimation { duration: 100 } }
     Q.Behavior on contentY { Q.NumberAnimation { duration: 100 } }
     Q.Component.onCompleted: {
